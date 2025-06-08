@@ -1,0 +1,9 @@
+{
+  "Event ID": "http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.Messages.html#RDS-EVENT-0006",
+  "Event Message": "DB instance restarted",
+  "Event Source": "db-instance",
+  "Event Time": "2025-01-10 11:02:49.061",
+  "Identifier Link": "https://console.aws.amazon.com/rds/home?region=ap-southeast-2#dbinstance:id=my-db-prod",
+  "Source ARN": "arn:aws:rds:ap-southeast-2:123456789012:db:my-db-prod",
+  "Source ID": "my-db-prod"
+}

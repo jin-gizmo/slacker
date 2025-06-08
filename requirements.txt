@@ -1,0 +1,8 @@
+# These are the extra requirements required to build but not for the lambda itself
+# ex: set ft=sh:
+
+# These are needed at run-time but are provided by AWS lambda
+boto3
+jmespath
+jsonschema[format-nongpl]
+pygments

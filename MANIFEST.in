@@ -1,0 +1,9 @@
+include *.md
+include LICENCE.txt
+include requirements.txt
+include slacker/requirements.txt
+recursive-include slacker/schemas *
+
+global-exclude .DS_Store .env
+global-exclude */__pycache__/*
+global-exclude *.pyc

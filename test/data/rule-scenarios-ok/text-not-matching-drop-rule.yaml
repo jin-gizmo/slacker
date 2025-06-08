@@ -1,0 +1,5 @@
+input: &input Hello world
+rules:
+  - match: this will not match
+    action: drop
+output: *input

@@ -1,0 +1,14 @@
+# "if" uses capture group to select the message and a template to munge the message
+
+input: Hello world
+
+rules:
+  - match: " +(?P<where>.*$)"
+    if: "{{ data.where == 'world' }}"
+    template: "{{ unclosed jinja directive"
+    action: send
+
+  # This should be the operative rule
+  - action: drop
+
+output: null

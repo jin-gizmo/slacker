@@ -1,0 +1,13 @@
+venv/
+untracked/
+dist/
+*.pyc
+*.zip
+.*.bkp
+.coverage
+.DS_Store
+*.egg-info
+*.bak
+.aws-sam/
+samconfig.toml
+untracked/

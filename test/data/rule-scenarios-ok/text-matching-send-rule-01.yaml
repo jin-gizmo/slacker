@@ -1,0 +1,8 @@
+input: &input Hello world
+
+rules:
+  - match: 'w.*ld'
+    action: send
+  - action: drop
+
+output: *input

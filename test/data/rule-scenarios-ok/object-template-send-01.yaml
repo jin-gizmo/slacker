@@ -1,0 +1,12 @@
+input:
+  x: X
+  y: Y
+
+rules:
+  # Implicit send action
+  - template: "The value of x is '{{ data.x }}' and y is '{{ data.y }}'"
+
+  # This action is not reached.
+  - action: drop
+
+output: "The value of x is 'X' and y is 'Y'"

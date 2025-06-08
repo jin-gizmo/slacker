@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Slacker (aka JinSlacker) sends messages from AWS services to Slack.
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: JinSlacker
+    Description: >-
+      Slacker (aka JinSlacker) sends messages from AWS services to Slack. It
+      supports dynamic time-of-day and content based filtering, rewriting and
+      routing of messages.
+    Author: Murray Andrews
+    SpdxLicenseId: BSD-3-Clause
+    LicenseUrl: LICENCE.txt
+    ReadmeUrl: README.md
+    Labels:
+      - slack
+      - sns
+      - cloudwatch
+      - notifications
+      - alerting
+      - webhook
+      - aws-integration
+    HomePageUrl: https://jin-gizmo.github.io/slacker/
+    SourceCodeUrl: https://github.com/jin-gizmo/slacker
+
+Parameters:
+  lambdaTimeout:
+    Description: Timeout for the lambda (seconds)
+    Type: Number
+    Default: '30'
+    MinValue: '15'
+    MaxValue: '900'
+    ConstraintDescription: Must be between 15 and 900.
+
+  lambdaMemory:
+    Description: Memory for the lambda (Mb)
+    Type: Number
+    Default: '150'
+    MinValue: '128'
+    ConstraintDescription: A minimum of 150Mb is recommended.
+
+  defaultSideBarColour:
+    Description: 'Default colour for sidebar on Slack messages (e.g. #ab1234).'
+    Type: String
+    Default: '#bbbbbb'
+    AllowedPattern: '^(#\p{XDigit}{6})|(good)|(warning)|(danger)$'
+    ConstraintDescription: 'Must be # followed by 6 hex digits or good, warning or danger.'
+
+  maxMessageLen:
+    Description: Maximum length of messages sent to Slack. Longer messages are truncated.
+    Type: Number
+    Default: '4000'
+    MinValue: '1'
+    ConstraintDescription: Must be a non-negative integer.
+
+  dynamoDbReadCapacity:
+    Description: Read capacity units for the DynamoDB tables.
+    Type: Number
+    Default: '5'
+    MinValue: '1'
+
+  logIncomingMessages:
+    Description: Log incoming messages to CloudWatch (0 = No, 1 = Yes)
+    Type: Number
+    AllowedValues: [ '0', '1' ]
+    Default: '0'
+
+Resources:
+  lambdaSlacker:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref AWS::StackName
+      Description: Send AWS event messages to Slack
+      CodeUri: slacker/
+      Handler: !Sub 'lambda_handler.lambda_handler'
+      Runtime: python3.13
+      Architectures:
+        - arm64
+      MemorySize: !Ref lambdaMemory
+      Timeout: !Ref lambdaTimeout
+      Environment:
+        Variables:
+          SLACKER_COLOUR: !Ref defaultSideBarColour
+          SLACKER_MSG_LEN: !Ref maxMessageLen
+          LOG_MESSAGES: !Ref logIncomingMessages
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: CloudWatchLogs
+              Effect: Allow
+              Action:
+                - 'logs:CreateLogGroup'
+                - 'logs:CreateLogStream'
+                - 'logs:PutLogEvents'
+                - 'logs:DescribeLogStreams'
+              Resource: 'arn:aws:logs:*:*:*'
+            - Sid: ListTables
+              Effect: Allow
+              Action: 'dynamodb:ListTables'
+              Resource: '*'
+            - Sid: ReadAccess
+              Effect: Allow
+              Action:
+                - 'dynamodb:BatchGetItem'
+                - 'dynamodb:DescribeTable'
+                - 'dynamodb:GetItem'
+                - 'dynamodb:Query'
+                - 'dynamodb:Scan'
+              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${AWS::StackName}.*'
+            - Effect: Allow
+              Action: 'sts:GetCallerIdentity'
+              Resource: '*'
+    Metadata:
+      BuildMethod: python3.13
+      BuildProperties:
+        Requirements: requirements.txt
+
+  dynWebhooks:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}.webhooks'
+      AttributeDefinitions:
+        - AttributeName: sourceId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sourceId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref dynamoDbReadCapacity
+        WriteCapacityUnits: 1
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  dynChannels:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}.channels'
+      AttributeDefinitions:
+        - AttributeName: channel
+          AttributeType: S
+      KeySchema:
+        - AttributeName: channel
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref dynamoDbReadCapacity
+        WriteCapacityUnits: 1
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+Outputs:
+  FunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt lambdaSlacker.Arn
+
+  FunctionName:
+    Description: Lambda Function Name
+    Value: !Ref lambdaSlacker
+
+  WebhooksTableName:
+    Description: Webhooks DynamoDB Table Name
+    Value: !Ref dynWebhooks
+
+  ChannelsTableName:
+    Description: Channels DynamoDB Table Name
+    Value: !Ref dynChannels

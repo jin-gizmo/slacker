@@ -1,0 +1,39 @@
+
+# Welcome to Slacker
+
+<div style="text-align: center;">
+  <img src="img/slacker-icon.png" alt="Slacker Logo" 
+       alt="Slacker Logo" 
+       width="150" 
+       height="auto"
+       class="slacker-logo">
+</div>
+
+**Slacker** (aka *JinSlacker*) sends messages from AWS services to Slack. It
+supports dynamic time-of-day and content based filtering, rewriting
+and routing of messages.
+
+**Slacker** has been used extensively in a large, business critical data warehouse /
+data lake environment.
+
+=== "Turn this ..."
+    <div align="center">
+        <img src="img/json-mess.png" alt="JSON mess" width="auto" height="200px">
+    </div>
+
+=== "Into this ..."
+    <div align="center">
+        <img src="img/cwatch-metric-alarm-on.png" alt="Oooh" width="auto" height="150px">
+    </div>
+
+[More ...][overview]
+
+!!! info ""
+    **Slacker** was developed at [Origin Energy](https://www.originenergy.com.au) as part of the
+    *Jindabyne* initiative. While not part of our core IP, it proved valuable
+    internally, and we're sharing it in the hope it's useful to others.
+
+    [![Jin Gizmo Home](https://img.shields.io/badge/Jin_Gizmo_Home-d30000?logo=GitHub&color=d30000)](https://jin-gizmo.github.io)
+
+    Kudos to Origin for fostering a culture that empowers its people
+    to build complex technology solutions in-house.

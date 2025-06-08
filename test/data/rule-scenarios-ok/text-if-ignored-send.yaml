@@ -1,0 +1,6 @@
+# "if" is ignored if no capture groups produce useable values
+input: &input Hello world
+rules:
+  - if: "{{ where == 'world' }}"
+    action: drop
+output: *input

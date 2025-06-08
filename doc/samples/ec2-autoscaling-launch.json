@@ -1,0 +1,50 @@
+{
+  "Origin": "EC2",
+  "Destination": "AutoScalingGroup",
+  "Progress": 50,
+  "AccountId": "123456789012",
+  "Description": "Launching a new EC2 instance: i-01918b2230392f631",
+  "RequestId": "59864e62-e212-6604-627d-5ac06f09f7ec",
+  "EndTime": "2024-12-05T21:27:35.517Z",
+  "AutoScalingGroupARN": "arn:aws:autoscaling:ap-southeast-2:123456789012:autoScalingGroup:8dc6c859-8cbd-4549-94f1-72678f7a5a0a:autoScalingGroupName/my-asg",
+  "ActivityId": "59864e62-e212-6604-627d-5ac06f09f7ec",
+  "StartTime": "2024-12-05T21:27:29.689Z",
+  "Service": "AWS Auto Scaling",
+  "Time": "2024-12-05T21:27:35.517Z",
+  "EC2InstanceId": "i-01918b2230392f631",
+  "StatusCode": "InProgress",
+  "StatusMessage": "",
+  "Details": {
+    "Subnet ID": "subnet-abcdefab",
+    "Availability Zone": "ap-southeast-2b",
+    "InvokingAlarms": [
+      {
+        "AlarmArn": "arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8",
+        "Trigger": {
+          "MetricName": "WorkerBacklog",
+          "EvaluateLowSampleCountPercentile": "",
+          "ComparisonOperator": "GreaterThanThreshold",
+          "TreatMissingData": "",
+          "Statistic": "AVERAGE",
+          "StatisticType": "Statistic",
+          "Period": 60,
+          "EvaluationPeriods": 3,
+          "Unit": null,
+          "Namespace": "MyApp",
+          "Threshold": 20
+        },
+        "AlarmName": "TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8",
+        "AlarmDescription": "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:ap-southeast-2:123456789012:scalingPolicy:a2c49e03-5a24-4a34-93a6-4d1aab48ad6d:autoScalingGroupName/my-asg:policyName/my-asg-asgWorkerScalingPolicy-crdTF9",
+        "AWSAccountId": "123456789012",
+        "OldStateValue": "ALARM",
+        "Region": "Asia Pacific (Sydney)",
+        "NewStateValue": "ALARM",
+        "AlarmConfigurationUpdatedTimestamp": 1732249141214,
+        "StateChangeTime": 1733433742189
+      }
+    ]
+  },
+  "AutoScalingGroupName": "my-asg",
+  "Cause": "At 2024-12-05T21:27:22Z a monitor alarm TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8 in state ALARM triggered policy my-asg-asgWorkerScalingPolicy-crdTF9lGieul changing the desired capacity from 2 to 3.  At 2024-12-05T21:27:28Z an instance was started in response to a difference between desired and actual capacity, increasing the capacity from 2 to 3.",
+  "Event": "autoscaling:EC2_INSTANCE_LAUNCH"
+}

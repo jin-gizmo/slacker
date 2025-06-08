@@ -1,0 +1,10 @@
+input: Hello world
+
+rules:
+  - match: this will not match
+    action: send
+  - match: 'w.*ld'
+    action: drop
+  - action: send
+
+output: null

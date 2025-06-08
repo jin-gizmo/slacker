@@ -1,0 +1,7 @@
+# "if" is ineffective (i.e. doesn't select message) if it does not yield truthy value
+input: &input Hello world
+rules:
+  - match: 'w.*ld'
+    if: "this is not a truthy value"
+    action: drop
+output: *input

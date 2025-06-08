@@ -1,0 +1,12 @@
+input:
+  x: X
+  y: Y
+
+rules:
+  # if clause won't be satisfied
+  - if: '{{ data.x == "..." }}'
+    action: send
+
+  - action: drop
+
+output: null

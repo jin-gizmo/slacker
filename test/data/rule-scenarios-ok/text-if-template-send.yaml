@@ -1,0 +1,13 @@
+# "if" uses capture group to select the message and a template to munge the message
+
+input: Hello world
+
+rules:
+  - match: " +(?P<where>.*$)"
+    if: "{{ data.where == 'world' }}"
+    template: "It's the end of the {{ data.where }} as we know it!"
+    action: send
+
+  - action: drop
+
+output: "It's the end of the world as we know it!"

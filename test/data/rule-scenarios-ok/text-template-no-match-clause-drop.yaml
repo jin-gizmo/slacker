@@ -1,0 +1,12 @@
+# A Plain text message without a match clause can't use a template.
+
+input: Hello world
+
+rules:
+  - template: "This will not appear in the output"
+    action: send
+
+  # This should be the operative rule
+  - action: drop
+
+output: null

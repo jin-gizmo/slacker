@@ -1,0 +1,9 @@
+# With implicit send
+
+input: &input Hello world
+
+rules:
+  - match: 'w.*ld'
+  - action: drop
+
+output: *input

@@ -1,0 +1,5 @@
+cachetools
+colorama
+jinja2
+requests
+pyyaml

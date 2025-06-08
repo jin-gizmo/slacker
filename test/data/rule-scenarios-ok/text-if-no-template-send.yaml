@@ -1,0 +1,12 @@
+# "if" uses capture group to select the message
+
+input: &input Hello world
+
+rules:
+  - match: " +(?P<where>.*$)"
+    if: "{{ data.where == 'world' }}"
+    action: send
+
+  - action: drop
+
+output: *input

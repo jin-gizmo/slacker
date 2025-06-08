@@ -1,0 +1,9 @@
+# "if" is ineffective (i.e. doesn't select message) if it has bad jinja
+input: &input Hello world
+
+rules:
+  - match: 'w.*ld'
+    if: "{{ where == 'world'"
+    action: drop
+
+output: *input

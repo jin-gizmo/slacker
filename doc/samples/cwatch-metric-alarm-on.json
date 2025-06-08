@@ -1,0 +1,39 @@
+{
+  "AlarmName": "my-sqs-queue-depth",
+  "AlarmDescription": "Too many messages queued for my-sqs-queue",
+  "AWSAccountId": "123456789012",
+  "AlarmConfigurationUpdatedTimestamp": "2023-04-19T05:17:32.984+0000",
+  "NewStateValue": "ALARM",
+  "NewStateReason": "Threshold Crossed: 30 out of the last 30 datapoints were greater than the threshold (20.0). The most recent datapoints which crossed the threshold: [60.0 (06/12/24 05:34:00), 60.0 (06/12/24 05:33:00), 59.0 (06/12/24 05:32:00), 59.0 (06/12/24 05:31:00), 59.0 (06/12/24 05:30:00)] (minimum 30 datapoints for OK -> ALARM transition).",
+  "StateChangeTime": "2024-12-06T05:36:35.649+0000",
+  "Region": "Asia Pacific (Sydney)",
+  "AlarmArn": "arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:my-sqs-queue-queue-depth",
+  "OldStateValue": "OK",
+  "OKActions": [
+    "arn:aws:sns:ap-southeast-2:123456789012:slacker-demo"
+  ],
+  "AlarmActions": [
+    "arn:aws:sns:ap-southeast-2:123456789012:slacker-demo"
+  ],
+  "InsufficientDataActions": [],
+  "Trigger": {
+    "MetricName": "ApproximateNumberOfMessagesVisible",
+    "Namespace": "AWS/SQS",
+    "StatisticType": "Statistic",
+    "Statistic": "MAXIMUM",
+    "Unit": null,
+    "Dimensions": [
+      {
+        "value": "my-sqs-queue",
+        "name": "QueueName"
+      }
+    ],
+    "Period": 60,
+    "EvaluationPeriods": 30,
+    "DatapointsToAlarm": 30,
+    "ComparisonOperator": "GreaterThanThreshold",
+    "Threshold": 20.0,
+    "TreatMissingData": "ignore",
+    "EvaluateLowSampleCountPercentile": ""
+  }
+}

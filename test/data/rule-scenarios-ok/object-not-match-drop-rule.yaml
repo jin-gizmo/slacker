@@ -1,0 +1,9 @@
+input:
+  x: 10
+  y: 20
+
+rules:
+  - match: this will not match
+    action: drop
+
+output: '{"x": 10, "y": 20}'

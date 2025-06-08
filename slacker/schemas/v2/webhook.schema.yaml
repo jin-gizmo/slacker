@@ -1,0 +1,131 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$schemaVersion: 2
+$id: https://jin-gizmo.github.io/slacker/schemas/webhook.schema.yaml
+documentation: https://jin-gizmo.github.io/slacker
+
+title: Slacker webhooks item schema
+description: Schema for slacker webhooks table items.
+
+type: object
+required:
+  - sourceId
+oneOf:
+  - required: [ 'url' ]
+    not:
+      required: [ 'channel' ]
+  - required: [ 'channel' ]
+    not:
+      required: [ 'url' ]
+
+patternProperties:
+  '^\$schema$':
+    type: string
+  '^[xX]-.*$': { }
+  '^#': { }
+
+additionalProperties: false
+
+properties:
+  sourceId:
+    $ref: '#/$defs/NonEmptyString'
+    description: >
+      The source ID for the AWS message source. e.g. The topic ARN for SNS topics
+      or `logs:log-group-name` for CloudWatch logs.
+  channel:
+    $ref: '#/$defs/NonEmptyString'
+    description: >
+      An alias for a Slack webhook URL that will be looked up in the channels
+      table.
+  account:
+    $ref: '#/$defs/AwsAccountId'
+    description: >
+      The AWS account ID into which the webhook is deployed.
+  colour:
+    $ref: '#/$defs/Colour'
+    description: >
+      Slack messages will have a colour bar displayed down the left margin
+      specified by the value of this field. This can be any hex colour code
+      (prefixed with '#') or one of the Slack special values `good`, `warning`,
+      or `danger`.
+  enabled:
+    type: boolean
+    default: true
+    description: >
+      If false, sending from this source to Slack is disabled.
+  preamble:
+    type: string
+  url:
+    type: string
+    pattern: '^https://[^\s]+$'
+    format: uri
+    description: >
+      The full URL of the Slack webhook. Deprecated. Use `channel` instead.
+  rules:
+    type: array
+    items:
+      $ref: '#/$defs/Rule'
+    description: >
+      A list of rules that can control whether a message is sent or not and the
+      content of the message.
+
+# ------------------------------------------------------------------------------
+$defs:
+  NonEmptyString:
+    type: string
+    minLength: 1
+  AwsAccountId:
+    type: string
+    pattern: '^[0-9]{12}$'
+    description: AWS account ID (12-digit numeric string)
+  Colour:
+    oneOf:
+      - type: string
+        enum: [ 'good', 'warning', 'danger' ]
+      - type: string
+        pattern: '^#[0-9A-Fa-f]{6}$'
+    description: >
+      A colour keyword ('good', 'warning', or 'danger') or a 6-digit hex
+      colour code prefixed with '#'.
+  Rule:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      '^#': { }
+    properties:
+      '#':
+        description: Comment; ignored
+        type: string
+      action:
+        type: string
+        enum: [ 'drop', 'send' ]
+        description: Action to take if the rule matches
+      match:
+        type: string
+        description: >
+          Regex applied to text messages using Python's re.search().
+          May contain named capture groups. If the message is an object
+          message or the regex does not match, the rule is skipped.
+      if:
+        type: string
+        description: >
+          Jinja template evaluated using object attributes or regex
+          capture groups. If the rendered result is truthy, the rule
+          applies; otherwise it is skipped.
+      template:
+        type: string
+        description: >
+          Jinja template used to produce the outgoing message text.
+          Has access to object attributes and regex capture groups.
+          If rendering fails, the rule is skipped.
+      channel:
+        type: string
+        description: >
+          Override the channel for this rule only.
+      colour:
+        $ref: '#/$defs/Colour'
+        description: >
+          Override the default colour for the Slack sidebar.
+      preamble:
+        type: string
+        description: >
+          Override the default preamble for the Slack message.

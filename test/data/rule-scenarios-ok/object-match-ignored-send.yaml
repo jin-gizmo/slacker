@@ -1,0 +1,10 @@
+input:
+  x: X
+  y: Y
+
+rules:
+  # Match is ignored for object inputs
+  - match: X
+    action: drop
+
+output: '{"x": "X", "y": "Y"}'

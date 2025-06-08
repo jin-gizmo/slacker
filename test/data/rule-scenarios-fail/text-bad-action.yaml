@@ -1,0 +1,6 @@
+input: &input Hello world
+
+rules:
+  - action: bad-action
+
+error: Unknown action in rule 1
