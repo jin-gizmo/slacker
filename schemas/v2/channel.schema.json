@@ -1,0 +1,39 @@
+{
+    "$defs": {
+        "NonEmptyString": {
+            "minLength": 1,
+            "type": "string"
+        }
+    },
+    "$id": "https://jin-gizmo.github.io/slacker/schemas/channel.schema.yaml",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schemaVersion": 2,
+    "additionalProperties": false,
+    "description": "Schema for slacker channels table items.",
+    "documentation": "https://jin-gizmo.github.io/slacker",
+    "patternProperties": {
+        "^#": {},
+        "^[xX]-.*$": {},
+        "^\\$schema$": {
+            "type": "string"
+        }
+    },
+    "properties": {
+        "channel": {
+            "$ref": "#/$defs/NonEmptyString",
+            "description": "An alias for a Slack webhook URL that can be referenced in the webhooks table.\n"
+        },
+        "url": {
+            "description": "The full URL of the Slack webhook.\n",
+            "format": "uri",
+            "pattern": "^https://[^\\s]+$",
+            "type": "string"
+        }
+    },
+    "required": [
+        "channel",
+        "url"
+    ],
+    "title": "Slacker channels item schema",
+    "type": "object"
+}

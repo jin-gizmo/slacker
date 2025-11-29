@@ -1,0 +1,1236 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS to Slack message relay">
+      
+      
+        <meta name="author" content="Murray Andrews">
+      
+      
+      
+        <link rel="prev" href="01-overview.html">
+      
+      
+        <link rel="next" href="03-examples.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="img/slacker-icon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>How it Works - Slacker User Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="css/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-it-works" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Slacker User Guide" class="md-header__button md-logo" aria-label="Slacker User Guide" data-md-component="logo">
+      
+  <img src="img/slacker-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slacker User Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How it Works
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        
+
+<a href="https://github.com/jin-gizmo/slacker" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Slacker on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Slacker User Guide" class="md-nav__button md-logo" aria-label="Slacker User Guide" data-md-component="logo">
+      
+  <img src="img/slacker-icon.png" alt="logo">
+
+    </a>
+    Slacker User Guide
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+<a href="https://github.com/jin-gizmo/slacker" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Slacker on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-overview.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it Works
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="02-how-it-works.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-sending-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sending Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-webhooks-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Webhooks Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-channels-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Channels Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jinja-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jinja Rendering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-wildcard-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Wildcard Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-examples.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-installation-and-usage.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation and Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-developing-message-rules.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developing Message Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-rule-library.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-release-notes.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-sending-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Sending Process
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-webhooks-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Webhooks Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-channels-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Channels Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jinja-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jinja Rendering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-wildcard-webhook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Wildcard Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-it-works">How it Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h1>
+<p>Slacker has a minimal AWS footprint, consisting of a Python-based AWS Lambda
+function and two small DynamoDB tables. It includes a CLI to test, validate and
+manage configuration data held in the DynamoDB tables.</p>
+<p>It uses Slack's <a href="https://api.slack.com/incoming-webhooks">incoming webhook</a>
+mechanism to send messages.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Slack webhooks are a legacy integration method but they work just fine.</p>
+</div>
+<p>The architecture is simple:</p>
+<p><img alt="Slacker architecture" src="img/slacker-architecture.drawio.svg" /></p>
+<div class="admonition note">
+<p class="admonition-title">Notes</p>
+<ol>
+<li>The slacker Lambda does not need to run within a VPC.</li>
+<li>EventBridge can send messages to slacker, either directly or via SNS.</li>
+</ol>
+</div>
+<h2 id="the-sending-process">The Sending Process<a class="headerlink" href="#the-sending-process" title="Permanent link">&para;</a></h2>
+<p>The sending process is:</p>
+<ol>
+<li>
+<p>Message Publishing</p>
+<p>A message is published by the originating AWS source (e.g. SNS) to the
+slacker Lambda function.</p>
+</li>
+<li>
+<p>Slack Webhook Lookup</p>
+<p>Slacker looks up the source ID (e.g. SNS topic ARN) in the DynamoDB
+<a href="#the-webhooks-table">webhooks table</a> and obtains the
+URL of the Slack webhook and some other control information. If the source
+ID is not found in the <a href="#the-webhooks-table">webhooks table</a>, the
+<a href="#the-wildcard-webhook">wildcard webhook</a> is used, if present.</p>
+</li>
+<li>
+<p>Rules Processing</p>
+<p>Slacker processes the message against any rules specified in the
+<a href="#the-webhooks-table">webhooks table</a> table to decide if the message should
+be discarded, diverted, or modified prior to sending.</p>
+</li>
+<li>
+<p>Message Sending</p>
+<p>Slacker uses the webhook URL to send the message to Slack.</p>
+</li>
+</ol>
+<h2 id="the-webhooks-table">The Webhooks Table<a class="headerlink" href="#the-webhooks-table" title="Permanent link">&para;</a></h2>
+<p>The webhooks table is a DynamoDB table named <code>slacker.webhooks</code>. It maps AWS
+message <a href="#message-sources">source IDs</a> to Slack webhook URLs. All sources
+feeding messages to slacker must have an entry in the table.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name of the table made more sense when slacker was young. Stuck with it
+now.</p>
+</div>
+<p>The table must be created with <code>sourceId</code> as the primary partition key. The
+table is created as part of a standard <a href="04-installation-and-usage.html#installation-and-usage">installation</a>.</p>
+<p>The table contains the following fields.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#...</td>
+<td>No</td>
+<td>Any</td>
+<td>Any field with a name starting with <code>#</code> is treated as a comment and ignored by slacker.</td>
+</tr>
+<tr>
+<td>account</td>
+<td>Note 1</td>
+<td>String</td>
+<td>The AWS account ID into which the webhook is deployed.</td>
+</tr>
+<tr>
+<td>channel</td>
+<td>Note 2</td>
+<td>String</td>
+<td>An alias for a Slack webhook URL that will be looked up in the <a href="#the-channels-table">channels table</a>. This can be overridden in individual <a href="#message-rules">message rules</a> to redirect a message.</td>
+</tr>
+<tr>
+<td>colour</td>
+<td>No</td>
+<td>String</td>
+<td>Slack messages will have a colour bar displayed down the left margin specified by the value of this field. This can be any hex colour code (prefixed with <code>#</code>), or one of the Slack special values <code>good</code>, <code>warning</code>, or <code>danger</code>. The default value is a light grey <code>#bbbbbb</code> unless overridden by the <code>SLACKER_COLOUR</code> <a href="04-installation-and-usage.html#slacker-lambda-environment-variables">environment variable</a>.</td>
+</tr>
+<tr>
+<td>enabled</td>
+<td>No</td>
+<td>boolean</td>
+<td>If <code>false</code>, sending from this source to Slack is disabled. Default is <code>true</code>.</td>
+</tr>
+<tr>
+<td>preamble</td>
+<td>No</td>
+<td>String</td>
+<td>A fixed text preamble for all messages. The most useful values are things such as <code>&lt;!here&gt;</code> and <code>&lt;!channel&gt;</code> which will cause Slack to insert <code>@here</code> and <code>@channel</code> alert tags respectively.</td>
+</tr>
+<tr>
+<td>rules</td>
+<td>No</td>
+<td>List</td>
+<td>A list of rules that can control whether a message is sent, or not, and the content of the message. See <a href="#message-rules">Message Rules</a>.</td>
+</tr>
+<tr>
+<td>sourceId</td>
+<td>Yes</td>
+<td>String</td>
+<td>The source ID for the AWS message source. See <a href="#message-sources">Message Sources</a> below.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>Note 2</td>
+<td>String</td>
+<td>The full URL of the Slack webhook. Deprecated. Use <code>channel</code> instead.</td>
+</tr>
+<tr>
+<td>x-*</td>
+<td>No</td>
+<td>Any</td>
+<td>Any field with a name starting with <code>x-</code> / <code>X-</code> is ignored. These can be used for metadata for things such as CI/CD tools.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Notes</p>
+<ol>
+<li>
+<p>The <code>account</code> field is not used by the slacker Lambda function. It is used
+    by the <a href="04-installation-and-usage.html#the-slacker-cli">slacker CLI</a> to ensure that webhook entries are not
+    accidentally deployed into the wrong account.</p>
+</li>
+<li>
+<p>One of <code>channel</code> (preferred) and <code>url</code> must be specified. </p>
+</li>
+<li>
+<p>Slacker caches webhook entries for 5 minutes. Table updates can take this
+    amount of time to become effective. The duration can be changed by setting
+    the <a href="04-installation-and-usage.html#slacker-lambda-environment-variables"><code>SLACKER_CACHE_TTL</code></a> environment
+    variable.</p>
+</li>
+</ol>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A JSON schema definition is available for webhooks table entries. Some IDEs
+(e.g. the JetBrains suite) will use the schema definition to provide
+auto-completion, dynamic validation etc. </p>
+<p>To use it, include the following element in entries:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">YAML</label><label for="__tabbed_1_2">JSON</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json</span>
+</span><span id="__span-0-2"><span class="nt">sourceID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span></code></pre></div>
+<p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><span class="p">{</span>
+</span><span id="__span-1-2"><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><span class="w">    </span><span class="nt">&quot;sourceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-1-4"><span class="p">}</span>
+</span></code></pre></div>
+<p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
+</div>
+</div>
+</div>
+<p>Note that the slacker CLI will add the <code>$schema</code> entry when downloading from
+DynamoDB and strip it when deploying to DynamoDB.</p>
+</div>
+<h2 id="the-channels-table">The Channels Table<a class="headerlink" href="#the-channels-table" title="Permanent link">&para;</a></h2>
+<p>The channels table is a DynamoDB table called <code>slacker.channels</code>. It provides an
+arbitrary alias for Slack webhooks. The <code>channel</code> field in a
+<a href="#the-webhooks-table">webhooks table</a> entry is used to obtain the actual Slack
+webhook URL from the channels table.</p>
+<p>The <em>channel</em> can be the Slack channel name corresponding to a given webhook,
+but it does not have to be. An alternative scheme could, for example, use
+functional labels such as <code>priority-1-alerts</code> as the <em>channel</em> alias. Slack
+itself only ever knows about the webhook URL.</p>
+<p>The channels table contains the following fields.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#...</td>
+<td>No</td>
+<td>Any</td>
+<td>Any field with a name starting with <code>#</code> is treated as a comment and ignored by slacker.</td>
+</tr>
+<tr>
+<td>channel</td>
+<td>Yes</td>
+<td>String</td>
+<td>An alias for a Slack webhook URL. This can be referenced in the <a href="#the-webhooks-table">webhooks table</a>.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>Yes</td>
+<td>String</td>
+<td>The full URL of the Slack webhook.</td>
+</tr>
+<tr>
+<td>x-*</td>
+<td>No</td>
+<td>Any</td>
+<td>Any field with a name starting with <code>x-</code> / <code>X-</code> is ignored. These can be used for metadata for things such as CI/CD tools.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Slacker caches channel entries for 5 minutes. Table updates can take this
+amount of time to become effective. The duration can be changed by setting
+the <a href="04-installation-and-usage.html#slacker-lambda-environment-variables"><code>SLACKER_CACHE_TTL</code></a> environment
+variable.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A JSON schema definition is also available for channels table entries.
+although the entries are so simple that it's hardly worth the bother.</p>
+<p>For what it's worth, to use it, include the following element in entries:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">YAML</label><label for="__tabbed_2_2">JSON</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json</span>
+</span><span id="__span-2-2"><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</span></code></pre></div>
+<p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><span class="p">{</span>
+</span><span id="__span-3-2"><span class="w">    </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><span class="w">    </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-3-4"><span class="p">}</span>
+</span></code></pre></div>
+<p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
+</div>
+</div>
+</div>
+</div>
+<h2 id="message-sources">Message Sources<a class="headerlink" href="#message-sources" title="Permanent link">&para;</a></h2>
+<p>See also <a href="04-installation-and-usage.html#adding-message-sources">Adding Message Sources</a>.</p>
+<p>Incoming messages may come from a number of sources. Slacker needs to identify
+the source to determine the processing and routing rules that should be applied.</p>
+<p>The value of the <code>sourceId</code> field of the <a href="#the-webhooks-table">webhooks table</a>
+is used to select the appropriate rule set. It is dependent on the source type.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Value of <code>sourceId</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudWatch Logs</td>
+<td><code>logs:</code> followed by the log group name (e.g. <code>logs:/var/log/messages</code>).</td>
+</tr>
+<tr>
+<td>SNS</td>
+<td>SNS topic ARN.</td>
+</tr>
+<tr>
+<td>Amazon EventBridge (via SNS)</td>
+<td>SNS topic ARN.</td>
+</tr>
+<tr>
+<td>Amazon EventBridge (direct, no input transform)</td>
+<td><code>events:</code> followed by the <code>source</code> field from the event message (e.g. <code>events:aws.rds</code>)</td>
+</tr>
+<tr>
+<td>Amazon EventBridge (direct, with input transform)</td>
+<td>Value of the <code>SlackerSourceId</code> field in the constructed message.</td>
+</tr>
+<tr>
+<td>Direct Invocation</td>
+<td>Value of the <code>SlackerSourceId</code> field in the input message.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="message-rules">Message Rules<a class="headerlink" href="#message-rules" title="Permanent link">&para;</a></h2>
+<p>A <a href="#the-webhooks-table">webhooks table</a> entry may contain a <code>rules</code> key that can
+filter and reformat messages.</p>
+<p>If there is no <code>rules</code> key, messages are sent to Slack, unfiltered and
+unmodified.</p>
+<p>If present, the <code>rules</code> key contains a list of individual rules that are
+processed in order. The first matching rule decides the treatment of the message
+and the subsequent rules are ignored. If no rules match a message, the message
+is sent to Slack unmodified.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Slacker's fallback position is to always deliver the message to Slack unless
+a correctly operating rule directs some other action. This means that errors
+in rules are generally not serious. It also means that rule sets can start
+out simple (or empty!) and be augmented over time.</p>
+</div>
+<p>Messages sent to slacker from AWS related events are of two kinds.</p>
+<ol>
+<li><strong>Object messages:</strong> These are JSON encoded objects. Slacker will decode
+    the JSON into an object when processing the rules. The attributes of the
+    object are then available for use in Jinja rendered constructs for message
+    filtering and reformatting.</li>
+<li><strong>Text messages:</strong> These are arbitrary text messages. Slacker can
+    optionally apply a
+    <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax">Python regex</a>
+    containing capture groups to these messages to extract named attributes for
+    use in Jinja rendered constructs for message filtering and reformatting.</li>
+</ol>
+<p>Each rule is an object (dictionary) that may contain the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#...</td>
+<td>Any field with a name starting with <code>#</code> is treated as a comment and ignored by slacker.</td>
+</tr>
+<tr>
+<td>action</td>
+<td>The action to take if the rule selects the message. Possible values are <code>drop</code> (discard the message) and <code>send</code>. The default is <code>send</code>.</td>
+</tr>
+<tr>
+<td>channel</td>
+<td>If the rule selects the message, override the <a href="#the-channels-table">channel</a> to which the message is sent.</td>
+</tr>
+<tr>
+<td>colour</td>
+<td>If the rule selects the message, override the default colour for the Slack sidebar.</td>
+</tr>
+<tr>
+<td>if</td>
+<td>A Jinja template that is rendered using the attributes from an <strong>object message</strong> or the regex capture groups matched from a <strong>text message</strong> to produce a <em>truthy</em> value. If the <em>truthy</em> value is <em>true</em>, the rule applies to the message, otherwise the rule is skipped.</td>
+</tr>
+<tr>
+<td>match</td>
+<td>A regex that will be applied to <strong>text messages</strong> using Python's <a href="https://docs.python.org/3/library/re.html#re.search"><code>re.search()</code></a>. If the message is an <strong>object message</strong> or does not match the regex, the rule is skipped. The regex may contain named capture groups using the <code>(?P&lt;name&gt;...)</code> syntax in the regex. These are then made available as Jinja rendering variables for use in a <code>template</code> to produce a new message text. Slacker also populates the <code>msg</code> parameter with the full message text.</td>
+</tr>
+<tr>
+<td>preamble</td>
+<td>If the rule selects the message, override the default preamble for the Slack message.</td>
+</tr>
+<tr>
+<td>template</td>
+<td>A Jinja template used to generate the actual message to be sent to Slack. This is rendered with the attributes from an <strong>object message</strong> or the regex capture groups matched from a <strong>text message</strong>. If the rendering process fails for any reason (e.g. malformed Jinja), the rule is skipped.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Rules can be tested locally using the <a href="04-installation-and-usage.html#the-slacker-cli">slacker CLI</a>.</p>
+</div>
+<p>The rule processing flow is shown below:</p>
+<p><img alt="Rule Processing Flow" src="img/flow.drawio.svg" /></p>
+<h2 id="jinja-rendering">Jinja Rendering<a class="headerlink" href="#jinja-rendering" title="Permanent link">&para;</a></h2>
+<p>These components of the <a href="#message-rules">message rules</a> are Jinja rendered:</p>
+<ul>
+<li>
+<p><code>if</code> predicates used to determine whether or not the rule applies.</p>
+</li>
+<li>
+<p><code>template</code> specifications used to generate the content of the Slack message.</p>
+</li>
+</ul>
+<p>Slacker makes the following rendering parameters available:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aws</td>
+<td>A dictionary of AWS related helper utilities as follows...</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;aws.account_id</td>
+<td>The AWS account ID.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;aws.Arn</td>
+<td>A class that takes an ARN and makes the individual components available as the following attributes: <code>partition</code>, <code>service</code>, <code>region</code>, <code>account</code>, <code>resource</code>. e.g. <code>{{ aws.Arn("arn:aws:sns:us-east-1:123456789012:xyzzy").region }}</code> is <code>us-east-1</code>.</td>
+</tr>
+<tr>
+<td>data</td>
+<td>Dictionary containing attributes extracted from the source message by a <code>match</code> regex applied to a <strong>text message</strong> or the decoded content of an <strong>object message</strong>.</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>The Python <code>datetime.datetime</code> module.</td>
+</tr>
+<tr>
+<td>date</td>
+<td>The Python <code>datetime.date</code> module.</td>
+</tr>
+<tr>
+<td>msg</td>
+<td>The original source message string.</td>
+</tr>
+<tr>
+<td>now</td>
+<td>A function that takes an optional timezone name (default <code>UTC</code>) and returns a timezone aware Python datetime object. e.g. <code>now()</code> or <code>now('Australia/Melbourne')</code>.</td>
+</tr>
+<tr>
+<td>re</td>
+<td>The Python <code>re</code> (regex) module.</td>
+</tr>
+<tr>
+<td>time_of_day</td>
+<td>A function that takes an optional timezone name (default <code>UTC</code>) and returns the current time as a string of the form <code>HH:MM:SS</code>. e.g. <code>current_time('UTC')</code> or <code>current_time('Australia/Melbourne')</code>.</td>
+</tr>
+<tr>
+<td>tz</td>
+<td>The python <code>ZoneInfo</code> module. e.g. <code>tz('Australia/Melbourne')</code>, <code>tz('UTC')</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-wildcard-webhook">The Wildcard Webhook<a class="headerlink" href="#the-wildcard-webhook" title="Permanent link">&para;</a></h2>
+<p>The <em>wildcard webhook</em> is a <a href="#the-webhooks-table">webhooks table</a> entry with a
+<code>sourceId</code> of <code>*</code>.</p>
+<p>It has two roles:</p>
+<ol>
+<li>
+<p><strong>Webhook of last resort:</strong> If an incoming message has a source ID that doesn't
+    match any entry in the <a href="#the-webhooks-table">webhooks table</a>, the wildcard
+    webhook is used to process the message.</p>
+<p>Without a wildcard webhook, the message would otherwise be dropped.</p>
+</li>
+<li>
+<p><strong>Container for common webhook rules:</strong> Any rules in the wildcard webhook
+    are implicitly appended to the rules of all other webhooks.</p>
+<p>This provides a single location for common rules that would otherwise need
+to be repeated in individual webhooks. Only the <code>rules</code> component of the
+wildcard webhook is used in this instance. Other fields are ignored.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Notes</p>
+<ol>
+<li>The wildcard webhook is optional. If there is no wildcard webhook,
+    incoming messages with an unmatched source ID will be dropped.</li>
+<li>To prevent a specific webhook from implicitly falling through to the
+    wildcard webhook rules, add an unqualified <code>send</code> (or <code>drop</code>) rule to
+    the end of the former's rule list.</li>
+</ol>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A sample set of rules for the wildcard webhook is provided in the
+<a href="06-rule-library.html#general-purpose-rules">rule library</a>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; Origin Energy 2025
+    </div>
+  
+</div>
+      <div class="md-footer-social">
+        <div class="md-copyright">
+          <div class="md-copyright__highlight">
+            v2.6.0
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

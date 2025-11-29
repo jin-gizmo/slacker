@@ -1,0 +1,154 @@
+{
+    "$defs": {
+        "AwsAccountId": {
+            "description": "AWS account ID (12-digit numeric string)",
+            "pattern": "^[0-9]{12}$",
+            "type": "string"
+        },
+        "Colour": {
+            "description": "A colour keyword ('good', 'warning', or 'danger') or a 6-digit hex colour code prefixed with '#'.\n",
+            "oneOf": [
+                {
+                    "enum": [
+                        "good",
+                        "warning",
+                        "danger"
+                    ],
+                    "type": "string"
+                },
+                {
+                    "pattern": "^#[0-9A-Fa-f]{6}$",
+                    "type": "string"
+                }
+            ]
+        },
+        "NonEmptyString": {
+            "minLength": 1,
+            "type": "string"
+        },
+        "Rule": {
+            "additionalProperties": false,
+            "patternProperties": {
+                "^#": {}
+            },
+            "properties": {
+                "#": {
+                    "description": "Comment; ignored",
+                    "type": "string"
+                },
+                "action": {
+                    "description": "Action to take if the rule matches",
+                    "enum": [
+                        "drop",
+                        "send"
+                    ],
+                    "type": "string"
+                },
+                "channel": {
+                    "description": "Override the channel for this rule only.\n",
+                    "type": "string"
+                },
+                "colour": {
+                    "$ref": "#/$defs/Colour",
+                    "description": "Override the default colour for the Slack sidebar.\n"
+                },
+                "if": {
+                    "description": "Jinja template evaluated using object attributes or regex capture groups. If the rendered result is truthy, the rule applies; otherwise it is skipped.\n",
+                    "type": "string"
+                },
+                "match": {
+                    "description": "Regex applied to text messages using Python's re.search(). May contain named capture groups. If the message is an object message or the regex does not match, the rule is skipped.\n",
+                    "type": "string"
+                },
+                "preamble": {
+                    "description": "Override the default preamble for the Slack message.\n",
+                    "type": "string"
+                },
+                "template": {
+                    "description": "Jinja template used to produce the outgoing message text. Has access to object attributes and regex capture groups. If rendering fails, the rule is skipped.\n",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "$id": "https://jin-gizmo.github.io/slacker/schemas/webhook.schema.yaml",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schemaVersion": 2,
+    "additionalProperties": false,
+    "description": "Schema for slacker webhooks table items.",
+    "documentation": "https://jin-gizmo.github.io/slacker",
+    "oneOf": [
+        {
+            "not": {
+                "required": [
+                    "channel"
+                ]
+            },
+            "required": [
+                "url"
+            ]
+        },
+        {
+            "not": {
+                "required": [
+                    "url"
+                ]
+            },
+            "required": [
+                "channel"
+            ]
+        }
+    ],
+    "patternProperties": {
+        "^#": {},
+        "^[xX]-.*$": {},
+        "^\\$schema$": {
+            "type": "string"
+        }
+    },
+    "properties": {
+        "account": {
+            "$ref": "#/$defs/AwsAccountId",
+            "description": "The AWS account ID into which the webhook is deployed.\n"
+        },
+        "channel": {
+            "$ref": "#/$defs/NonEmptyString",
+            "description": "An alias for a Slack webhook URL that will be looked up in the channels table.\n"
+        },
+        "colour": {
+            "$ref": "#/$defs/Colour",
+            "description": "Slack messages will have a colour bar displayed down the left margin specified by the value of this field. This can be any hex colour code (prefixed with '#') or one of the Slack special values `good`, `warning`, or `danger`.\n"
+        },
+        "enabled": {
+            "default": true,
+            "description": "If false, sending from this source to Slack is disabled.\n",
+            "type": "boolean"
+        },
+        "preamble": {
+            "type": "string"
+        },
+        "rules": {
+            "description": "A list of rules that can control whether a message is sent or not and the content of the message.\n",
+            "items": {
+                "$ref": "#/$defs/Rule"
+            },
+            "type": "array"
+        },
+        "sourceId": {
+            "$ref": "#/$defs/NonEmptyString",
+            "description": "The source ID for the AWS message source. e.g. The topic ARN for SNS topics or `logs:log-group-name` for CloudWatch logs.\n"
+        },
+        "url": {
+            "description": "The full URL of the Slack webhook. Deprecated. Use `channel` instead.\n",
+            "format": "uri",
+            "pattern": "^https://[^\\s]+$",
+            "type": "string"
+        }
+    },
+    "required": [
+        "sourceId"
+    ],
+    "title": "Slacker webhooks item schema",
+    "type": "object"
+}

@@ -1,0 +1,1313 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS to Slack message relay">
+      
+      
+        <meta name="author" content="Murray Andrews">
+      
+      
+      
+        <link rel="prev" href="05-developing-message-rules.html">
+      
+      
+        <link rel="next" href="07-release-notes.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="img/slacker-icon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Rule Library - Slacker User Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="css/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rule-library" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Slacker User Guide" class="md-header__button md-logo" aria-label="Slacker User Guide" data-md-component="logo">
+      
+  <img src="img/slacker-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slacker User Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Rule Library
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        
+
+<a href="https://github.com/jin-gizmo/slacker" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Slacker on GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Slacker User Guide" class="md-nav__button md-logo" aria-label="Slacker User Guide" data-md-component="logo">
+      
+  <img src="img/slacker-icon.png" alt="logo">
+
+    </a>
+    Slacker User Guide
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+<a href="https://github.com/jin-gizmo/slacker" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Slacker on GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-overview.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-how-it-works.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-examples.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-installation-and-usage.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation and Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-developing-message-rules.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developing Message Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Library
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="06-rule-library.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudwatch-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EC2 Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-purpose-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Purpose Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-release-notes.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudwatch-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ec2-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EC2 Events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-purpose-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        General Purpose Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rule-library">Rule Library<a class="headerlink" href="#rule-library" title="Permanent link">&para;</a></h1>
+<p>This section provides some generic, reusable rules that may prove useful. Adjust
+them to suit your needs.</p>
+<p>In the examples, we have properly formatted any JSON in the source. In the
+absence of the slacker rule, this would appear in Slack as unreadable symbol
+soup. The chunky kind. With carrots.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some of the rules in the library may have overlapping scope. Bear in mind
+that the order of rules is significant, with the first matching rule being
+the only one that is applied. More specific rules should precede less
+specific ones.</p>
+</div>
+<h2 id="aws-events">AWS Events<a class="headerlink" href="#aws-events" title="Permanent link">&para;</a></h2>
+<details>
+<summary>AWS Health Event</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Message</label><label for="__tabbed_1_2">Rule</label><label for="__tabbed_1_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><span class="p">{</span>
+</span><span id="__span-0-2"><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f647f386-2347-6d6a-d4e9-d8d9ec36d810&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><span class="w">  </span><span class="nt">&quot;detail-type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS Health Event&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;aws.health&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><span class="w">  </span><span class="nt">&quot;account&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><span class="w">  </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-30T05:35:14Z&quot;</span><span class="p">,</span>
+</span><span id="__span-0-8"><span class="w">  </span><span class="nt">&quot;region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ap-southeast-2&quot;</span><span class="p">,</span>
+</span><span id="__span-0-9"><span class="w">  </span><span class="nt">&quot;resources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-10"><span class="w">    </span><span class="s2">&quot;FarGate01|service-01&quot;</span><span class="p">,</span>
+</span><span id="__span-0-11"><span class="w">    </span><span class="s2">&quot;FarGate01|service-02&quot;</span><span class="p">,</span>
+</span><span id="__span-0-12"><span class="w">    </span><span class="s2">&quot;FarGate01|service-03&quot;</span>
+</span><span id="__span-0-13"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-0-14"><span class="w">  </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-15"><span class="w">    </span><span class="nt">&quot;eventArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:health:ap-southeast-2::event/ECS/AWS_ECS_TASK_PATCHING_RETIREMENT/AWS_ECS_TASK_PATCHING_RETIREMENT-SYD-DockerLinux-1-4-0-279-123456789012-MANAGED&quot;</span><span class="p">,</span>
+</span><span id="__span-0-16"><span class="w">    </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ECS&quot;</span><span class="p">,</span>
+</span><span id="__span-0-17"><span class="w">    </span><span class="nt">&quot;eventTypeCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS_ECS_TASK_PATCHING_RETIREMENT&quot;</span><span class="p">,</span>
+</span><span id="__span-0-18"><span class="w">    </span><span class="nt">&quot;eventTypeCategory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;scheduledChange&quot;</span><span class="p">,</span>
+</span><span id="__span-0-19"><span class="w">    </span><span class="nt">&quot;eventScopeCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ACCOUNT_SPECIFIC&quot;</span><span class="p">,</span>
+</span><span id="__span-0-20"><span class="w">    </span><span class="nt">&quot;communicationId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;334c2ec2523e1d02051ecc68e718394c9b95da96-1&quot;</span><span class="p">,</span>
+</span><span id="__span-0-21"><span class="w">    </span><span class="nt">&quot;startTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 7 Dec 2024 05:00:00 GMT&quot;</span><span class="p">,</span>
+</span><span id="__span-0-22"><span class="w">    </span><span class="nt">&quot;endTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 14 Dec 2024 05:00:00 GMT&quot;</span><span class="p">,</span>
+</span><span id="__span-0-23"><span class="w">    </span><span class="nt">&quot;lastUpdatedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 30 Nov 2024 05:34:33 GMT&quot;</span><span class="p">,</span>
+</span><span id="__span-0-24"><span class="w">    </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;upcoming&quot;</span><span class="p">,</span>
+</span><span id="__span-0-25"><span class="w">    </span><span class="nt">&quot;eventRegion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ap-southeast-2&quot;</span><span class="p">,</span>
+</span><span id="__span-0-26"><span class="w">    </span><span class="nt">&quot;eventDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-27"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-0-28"><span class="w">        </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
+</span><span id="__span-0-29"><span class="w">        </span><span class="nt">&quot;latestDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You are receiving this notification because AWS Fargate has deployed a new platform version revision (1) and will retire any tasks running on previous platform version revision(s) starting at Sat, 7 Dec 2024 05:00 GMT as part of routine task maintenance (2). Please find the list of affected tasks in the \\\&quot;Affected Resources\\\&quot; tab . There is no action required on your part unless you want to replace these tasks before task maintenance start time. When using the default value of 100% for minimum healthy percent configuration of an Amazon Elastic Container Service (Amazon ECS) service (3), a replacement task will be launched on the most recent platform version revision before the affected task is retired. Any tasks launched after Sat, 30 Nov 2024 05:00 GMT were launched on the new platform version revision.\\n\\nAWS Fargate is a serverless, pay-as-you-go compute engine that lets you focus on building applications without managing servers. As described in the Fargate documentation (2) and (4), Fargate regularly deploys platform version revisions to make new features available and for routine maintenance. The Fargate update includes updates to the underlying Operating System (Linux or Windows as applicable), and to runtime components. Fargate will gradually replace the tasks in your service using your configured deployment settings, ensuring all tasks run on the new Fargate platform version revision.\\n\\nWe do not expect this update to impact your ECS services. However, if you want to control when your tasks are replaced, you can initiate an ECS service update before Sat, 7 Dec 2024 05:00 GMT  by following the instructions below. \\n\\nIf you are using the rolling deployment type for your service, you can run the update-service command from the AWS command-line interface specifying force-new-deployment:\\n\\n$ aws ecs update-service --service service_name \\\n--cluster cluster_name --force-new-deployment\\n\\nIf you are using the Blue/Green deployment type, please refer to the documentation for create-deployment (5) and create a new deployment using the same task definition version.\\n\\nPlease contact AWS Support (6) if you have any questions or concerns.\\n\\n(1) https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-fargate.html\\n(2) https://docs.aws.amazon.com/AmazonECS/latest/userguide/task-maintenance.html\\n(3) https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service_definition_parameters.html#sd-deploymentconfiguration \\n(4) https://aws.amazon.com/blogs/containers/improving-operational-visibility-with-aws-fargate-task-retirement-notifications/\\n(5) https://docs.aws.amazon.com/cli/latest/reference/deploy/create-deployment.html\\n(6) https://aws.amazon.com/support\\n\\n&quot;</span>
+</span><span id="__span-0-30"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-0-31"><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-0-32"><span class="w">    </span><span class="nt">&quot;affectedEntities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-33"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-0-34"><span class="w">        </span><span class="nt">&quot;entityValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FarGate01|service-01&quot;</span><span class="p">,</span>
+</span><span id="__span-0-35"><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IMPAIRED&quot;</span><span class="p">,</span>
+</span><span id="__span-0-36"><span class="w">        </span><span class="nt">&quot;lastUpdatedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 30 Nov 2024 05:34:33 GMT&quot;</span>
+</span><span id="__span-0-37"><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-0-38"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-0-39"><span class="w">        </span><span class="nt">&quot;entityValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FarGate01|service-02&quot;</span><span class="p">,</span>
+</span><span id="__span-0-40"><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IMPAIRED&quot;</span><span class="p">,</span>
+</span><span id="__span-0-41"><span class="w">        </span><span class="nt">&quot;lastUpdatedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 30 Nov 2024 05:34:33 GMT&quot;</span>
+</span><span id="__span-0-42"><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-0-43"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-0-44"><span class="w">        </span><span class="nt">&quot;entityValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FarGate01|service-03&quot;</span><span class="p">,</span>
+</span><span id="__span-0-45"><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IMPAIRED&quot;</span><span class="p">,</span>
+</span><span id="__span-0-46"><span class="w">        </span><span class="nt">&quot;lastUpdatedTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sat, 30 Nov 2024 05:34:33 GMT&quot;</span>
+</span><span id="__span-0-47"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-0-48"><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-0-49"><span class="w">    </span><span class="nt">&quot;affectedAccount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-0-50"><span class="w">    </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+</span><span id="__span-0-51"><span class="w">    </span><span class="nt">&quot;totalPages&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+</span><span id="__span-0-52"><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-53"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-1-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS Health Event</span>
+</span><span id="__span-1-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data[&#39;detail-type&#39;]</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;AWS</span><span class="nv"> </span><span class="s">Health</span><span class="nv"> </span><span class="s">Event&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-1-4"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+</span><span id="__span-1-5"><span class="w">      </span><span class="no">{% set icons = {</span>
+</span><span id="__span-1-6"><span class="w">         </span><span class="no">&#39;scheduledChange&#39;: &#39;:calendar:&#39;,</span>
+</span><span id="__span-1-7"><span class="w">         </span><span class="no">&#39;issue&#39;: &#39;:zap:&#39;,</span>
+</span><span id="__span-1-8"><span class="w">         </span><span class="no">&#39;accountNotification&#39;: &#39;:information_source:&#39;,</span>
+</span><span id="__span-1-9"><span class="w">         </span><span class="no">&#39;investigation&#39;: &#39;:magnifying_glass_right:&#39;,</span>
+</span><span id="__span-1-10"><span class="w">       </span><span class="no">} %}</span>
+</span><span id="__span-1-11"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-1-12"><span class="w">      </span><span class="no">{{ icons.get(data.detail.eventTypeCategory, &#39;:large_purple_circle:&#39;) }}</span>
+</span><span id="__span-1-13"><span class="w">      </span><span class="no">*{{ data.detail.eventTypeCode }}*</span>
+</span><span id="__span-1-14"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-1-15"><span class="w">      </span><span class="no">{{ data.detail.eventTypeCategory }}</span>
+</span><span id="__span-1-16">
+</span><span id="__span-1-17"><span class="w">      </span><span class="no">*{{ data.detail.startTime }} ... {{ data.detail.endTime }}*</span>
+</span><span id="__span-1-18">
+</span><span id="__span-1-19"><span class="w">      </span><span class="no">{% if data.resources -%}</span>
+</span><span id="__span-1-20"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-1-21">
+</span><span id="__span-1-22"><span class="w">      </span><span class="no">{% for resource in data.resources %}</span>
+</span><span id="__span-1-23"><span class="w">      </span><span class="no">* {{ resource }}</span>
+</span><span id="__span-1-24">
+</span><span id="__span-1-25"><span class="w">      </span><span class="no">{% endfor -%}</span>
+</span><span id="__span-1-26"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-1-27"><span class="w">      </span><span class="no">{% endif %}</span>
+</span><span id="__span-1-28">
+</span><span id="__span-1-29"><span class="w">      </span><span class="no">{{ (data.detail.eventDescription | first).latestDescription | replace(&#39;\\n&#39;, &#39;\n&#39;)  }}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/aws-health-event.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<h2 id="cloudwatch-alarms">CloudWatch Alarms<a class="headerlink" href="#cloudwatch-alarms" title="Permanent link">&para;</a></h2>
+<p>A core use case for slacker is to reformat CloudWatch alarm messages delivered
+via SNS into something readable.</p>
+<p>Some alarms will naturally be sent to a paging service, but it's almost always
+worth mirroring them in Slack. Also, a lot of alarms reveal something
+interesting about the environment without being serious enough to page someone.</p>
+<details>
+<summary>CloudWatch Generic Alarm On</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Message</label><label for="__tabbed_2_2">Rule</label><label for="__tabbed_2_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><span class="p">{</span>
+</span><span id="__span-2-2"><span class="w">  </span><span class="nt">&quot;AlarmName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-sqs-queue-depth&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><span class="w">  </span><span class="nt">&quot;AlarmDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Too many messages queued for my-sqs-queue&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><span class="w">  </span><span class="nt">&quot;AWSAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><span class="w">  </span><span class="nt">&quot;AlarmConfigurationUpdatedTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-04-19T05:17:32.984+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><span class="w">  </span><span class="nt">&quot;NewStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><span class="w">  </span><span class="nt">&quot;NewStateReason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Threshold Crossed: 30 out of the last 30 datapoints were greater than the threshold (20.0). The most recent datapoints which crossed the threshold: [60.0 (06/12/24 05:34:00), 60.0 (06/12/24 05:33:00), 59.0 (06/12/24 05:32:00), 59.0 (06/12/24 05:31:00), 59.0 (06/12/24 05:30:00)] (minimum 30 datapoints for OK -&gt; ALARM transition).&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><span class="w">  </span><span class="nt">&quot;StateChangeTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-06T05:36:35.649+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><span class="w">  </span><span class="nt">&quot;Region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Asia Pacific (Sydney)&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><span class="w">  </span><span class="nt">&quot;AlarmArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:my-sqs-queue-queue-depth&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><span class="w">  </span><span class="nt">&quot;OldStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-2-12"><span class="w">  </span><span class="nt">&quot;OKActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-13"><span class="w">    </span><span class="s2">&quot;arn:aws:sns:ap-southeast-2:123456789012:slacker-demo&quot;</span>
+</span><span id="__span-2-14"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-2-15"><span class="w">  </span><span class="nt">&quot;AlarmActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-16"><span class="w">    </span><span class="s2">&quot;arn:aws:sns:ap-southeast-2:123456789012:slacker-demo&quot;</span>
+</span><span id="__span-2-17"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-2-18"><span class="w">  </span><span class="nt">&quot;InsufficientDataActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-2-19"><span class="w">  </span><span class="nt">&quot;Trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-20"><span class="w">    </span><span class="nt">&quot;MetricName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ApproximateNumberOfMessagesVisible&quot;</span><span class="p">,</span>
+</span><span id="__span-2-21"><span class="w">    </span><span class="nt">&quot;Namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS/SQS&quot;</span><span class="p">,</span>
+</span><span id="__span-2-22"><span class="w">    </span><span class="nt">&quot;StatisticType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Statistic&quot;</span><span class="p">,</span>
+</span><span id="__span-2-23"><span class="w">    </span><span class="nt">&quot;Statistic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MAXIMUM&quot;</span><span class="p">,</span>
+</span><span id="__span-2-24"><span class="w">    </span><span class="nt">&quot;Unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-2-25"><span class="w">    </span><span class="nt">&quot;Dimensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-26"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-2-27"><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-sqs-queue&quot;</span><span class="p">,</span>
+</span><span id="__span-2-28"><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QueueName&quot;</span>
+</span><span id="__span-2-29"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-2-30"><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-2-31"><span class="w">    </span><span class="nt">&quot;Period&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+</span><span id="__span-2-32"><span class="w">    </span><span class="nt">&quot;EvaluationPeriods&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+</span><span id="__span-2-33"><span class="w">    </span><span class="nt">&quot;DatapointsToAlarm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+</span><span id="__span-2-34"><span class="w">    </span><span class="nt">&quot;ComparisonOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GreaterThanThreshold&quot;</span><span class="p">,</span>
+</span><span id="__span-2-35"><span class="w">    </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span><span class="p">,</span>
+</span><span id="__span-2-36"><span class="w">    </span><span class="nt">&quot;TreatMissingData&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+</span><span id="__span-2-37"><span class="w">    </span><span class="nt">&quot;EvaluateLowSampleCountPercentile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-2-38"><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-39"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-3-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudWatch Alarm ON</span>
+</span><span id="__span-3-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.NewStateValue</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;ALARM&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-3-4"><span class="w">    </span><span class="nt">colour</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#ff0000&#39;</span>
+</span><span id="__span-3-5"><span class="w">    </span><span class="nt">preamble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;!channel&gt;</span>
+</span><span id="__span-3-6"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-3-7"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-3-8"><span class="w">      </span><span class="no">{%- set desc=(data.AlarmDescription or data.AlarmName or &#39;?&#39;).splitlines() -%}</span>
+</span><span id="__span-3-9">
+</span><span id="__span-3-10"><span class="w">      </span><span class="no">:red_circle:</span>
+</span><span id="__span-3-11"><span class="w">      </span><span class="no">*{{ desc[0].strip() }}*</span>
+</span><span id="__span-3-12"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-3-13"><span class="w">      </span><span class="no">{{ data.StateChangeTime.split(&#39;.&#39;)[0] }}Z</span>
+</span><span id="__span-3-14"><span class="w">      </span><span class="no">{%- if desc | length &gt; 1 %}</span>
+</span><span id="__span-3-15">
+</span><span id="__span-3-16">
+</span><span id="__span-3-17"><span class="w">      </span><span class="no">{{ data.AlarmDescription }}{%endif %}</span>
+</span><span id="__span-3-18">
+</span><span id="__span-3-19">
+</span><span id="__span-3-20"><span class="w">      </span><span class="no">_{{ data.NewStateReason }}_</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/cwatch-metric-alarm-on.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary>CloudWatch Generic Alarm Off</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Message</label><label for="__tabbed_3_2">Rule</label><label for="__tabbed_3_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><span class="p">{</span>
+</span><span id="__span-4-2"><span class="w">  </span><span class="nt">&quot;AlarmName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-sqs-queue-depth&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><span class="w">  </span><span class="nt">&quot;AlarmDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Too many messages queued for my-sqs-queue&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><span class="w">  </span><span class="nt">&quot;AWSAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><span class="w">  </span><span class="nt">&quot;AlarmConfigurationUpdatedTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-11-19T23:16:17.097+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><span class="w">  </span><span class="nt">&quot;NewStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><span class="w">  </span><span class="nt">&quot;NewStateReason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Threshold Crossed: 1 out of the last 50 datapoints [48.0 (04/12/24 00:34:00)] was not greater than the threshold (50.0) (minimum 1 datapoint for ALARM -&gt; OK transition).&quot;</span><span class="p">,</span>
+</span><span id="__span-4-8"><span class="w">  </span><span class="nt">&quot;StateChangeTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-04T00:36:01.796+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-4-9"><span class="w">  </span><span class="nt">&quot;Region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Asia Pacific (Sydney)&quot;</span><span class="p">,</span>
+</span><span id="__span-4-10"><span class="w">  </span><span class="nt">&quot;AlarmArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:my-sqs-queue-queue-depth&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><span class="w">  </span><span class="nt">&quot;OldStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><span class="w">  </span><span class="nt">&quot;OKActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-13"><span class="w">    </span><span class="s2">&quot;arn:aws:sns:ap-southeast-2:123456789012:slacker-demo&quot;</span>
+</span><span id="__span-4-14"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-4-15"><span class="w">  </span><span class="nt">&quot;AlarmActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-16"><span class="w">    </span><span class="s2">&quot;arn:aws:sns:ap-southeast-2:123456789012:slacker-demo&quot;</span>
+</span><span id="__span-4-17"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-4-18"><span class="w">  </span><span class="nt">&quot;InsufficientDataActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-4-19"><span class="w">  </span><span class="nt">&quot;Trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-20"><span class="w">    </span><span class="nt">&quot;MetricName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ApproximateNumberOfMessagesVisible&quot;</span><span class="p">,</span>
+</span><span id="__span-4-21"><span class="w">    </span><span class="nt">&quot;Namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS/SQS&quot;</span><span class="p">,</span>
+</span><span id="__span-4-22"><span class="w">    </span><span class="nt">&quot;StatisticType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Statistic&quot;</span><span class="p">,</span>
+</span><span id="__span-4-23"><span class="w">    </span><span class="nt">&quot;Statistic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MAXIMUM&quot;</span><span class="p">,</span>
+</span><span id="__span-4-24"><span class="w">    </span><span class="nt">&quot;Unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-4-25"><span class="w">    </span><span class="nt">&quot;Dimensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-26"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-4-27"><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-sqs-queue&quot;</span><span class="p">,</span>
+</span><span id="__span-4-28"><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;QueueName&quot;</span>
+</span><span id="__span-4-29"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-4-30"><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-4-31"><span class="w">    </span><span class="nt">&quot;Period&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+</span><span id="__span-4-32"><span class="w">    </span><span class="nt">&quot;EvaluationPeriods&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-4-33"><span class="w">    </span><span class="nt">&quot;DatapointsToAlarm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-4-34"><span class="w">    </span><span class="nt">&quot;ComparisonOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GreaterThanThreshold&quot;</span><span class="p">,</span>
+</span><span id="__span-4-35"><span class="w">    </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">50.0</span><span class="p">,</span>
+</span><span id="__span-4-36"><span class="w">    </span><span class="nt">&quot;TreatMissingData&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+</span><span id="__span-4-37"><span class="w">    </span><span class="nt">&quot;EvaluateLowSampleCountPercentile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-4-38"><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-39"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-5-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudWatch Alarm OFF</span>
+</span><span id="__span-5-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.NewStateValue</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;OK&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-5-4"><span class="w">    </span><span class="nt">colour</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#00ff00&#39;</span>
+</span><span id="__span-5-5"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-5-6"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-5-7"><span class="w">      </span><span class="no">{%- set desc=(data.AlarmDescription or data.AlarmName or &#39;?&#39;).splitlines() -%}</span>
+</span><span id="__span-5-8">
+</span><span id="__span-5-9"><span class="w">      </span><span class="no">:white_check_mark:</span>
+</span><span id="__span-5-10"><span class="w">      </span><span class="no">*{{ desc[0].strip() }}*</span>
+</span><span id="__span-5-11"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-5-12"><span class="w">      </span><span class="no">{{ data.StateChangeTime.split(&#39;.&#39;)[0] }}Z</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/cwatch-metric-alarm-off.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary>CloudWatch API Gateway Alarm On</summary>
+<p>This variant on the generic CloudWatch alarm is specific to API Gateway
+related alarms. It needs to be placed earlier in the rules than the generic
+CloudWatch alarm rule.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><input id="__tabbed_4_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Message</label><label for="__tabbed_4_2">Rule</label><label for="__tabbed_4_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><span class="p">{</span>
+</span><span id="__span-6-2"><span class="w">  </span><span class="nt">&quot;AlarmName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-portal-api-4XX-error&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><span class="w">  </span><span class="nt">&quot;AlarmDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Api gateway my-portal-api 4XX error more than 50 for 10 minutes. Observation required. More information: https://jin-gizmo.github.io&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><span class="w">  </span><span class="nt">&quot;AWSAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><span class="w">  </span><span class="nt">&quot;AlarmConfigurationUpdatedTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-04-18T00:31:54.519+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><span class="w">  </span><span class="nt">&quot;NewStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-6-7"><span class="w">  </span><span class="nt">&quot;NewStateReason&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Threshold Crossed: 2 out of the last 2 datapoints [63.0 (11/12/24 06:04:00), 66.0 (11/12/24 05:59:00)] were greater than the threshold (50.0) (minimum 2 datapoints for OK -&gt; ALARM transition).&quot;</span><span class="p">,</span>
+</span><span id="__span-6-8"><span class="w">  </span><span class="nt">&quot;StateChangeTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-11T06:09:47.192+0000&quot;</span><span class="p">,</span>
+</span><span id="__span-6-9"><span class="w">  </span><span class="nt">&quot;Region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Asia Pacific (Sydney)&quot;</span><span class="p">,</span>
+</span><span id="__span-6-10"><span class="w">  </span><span class="nt">&quot;AlarmArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:my-portal-api-4XX-error&quot;</span><span class="p">,</span>
+</span><span id="__span-6-11"><span class="w">  </span><span class="nt">&quot;OldStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-6-12"><span class="w">  </span><span class="nt">&quot;OKActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-6-13"><span class="w">  </span><span class="nt">&quot;AlarmActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-14"><span class="w">    </span><span class="s2">&quot;arn:aws:sns:ap-southeast-2:123456789012:slacker-demo&quot;</span>
+</span><span id="__span-6-15"><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-6-16"><span class="w">  </span><span class="nt">&quot;InsufficientDataActions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-6-17"><span class="w">  </span><span class="nt">&quot;Trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-18"><span class="w">    </span><span class="nt">&quot;MetricName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4XXError&quot;</span><span class="p">,</span>
+</span><span id="__span-6-19"><span class="w">    </span><span class="nt">&quot;Namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS/ApiGateway&quot;</span><span class="p">,</span>
+</span><span id="__span-6-20"><span class="w">    </span><span class="nt">&quot;StatisticType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Statistic&quot;</span><span class="p">,</span>
+</span><span id="__span-6-21"><span class="w">    </span><span class="nt">&quot;Statistic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SUM&quot;</span><span class="p">,</span>
+</span><span id="__span-6-22"><span class="w">    </span><span class="nt">&quot;Unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-6-23"><span class="w">    </span><span class="nt">&quot;Dimensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-24"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-6-25"><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-portal-api&quot;</span><span class="p">,</span>
+</span><span id="__span-6-26"><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ApiName&quot;</span>
+</span><span id="__span-6-27"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-6-28"><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-6-29"><span class="w">    </span><span class="nt">&quot;Period&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+</span><span id="__span-6-30"><span class="w">    </span><span class="nt">&quot;EvaluationPeriods&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-6-31"><span class="w">    </span><span class="nt">&quot;DatapointsToAlarm&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-6-32"><span class="w">    </span><span class="nt">&quot;ComparisonOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GreaterThanThreshold&quot;</span><span class="p">,</span>
+</span><span id="__span-6-33"><span class="w">    </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">50.0</span><span class="p">,</span>
+</span><span id="__span-6-34"><span class="w">    </span><span class="nt">&quot;TreatMissingData&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notBreaching&quot;</span><span class="p">,</span>
+</span><span id="__span-6-35"><span class="w">    </span><span class="nt">&quot;EvaluateLowSampleCountPercentile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+</span><span id="__span-6-36"><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-6-37"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-7-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudWatch Alarm ON (API Gateway Alarm)</span>
+</span><span id="__span-7-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.NewStateValue</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;ALARM&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">data.Trigger.Namespace</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;AWS/ApiGateway&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-7-4"><span class="w">    </span><span class="nt">colour</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#ff0000&#39;</span>
+</span><span id="__span-7-5"><span class="w">    </span><span class="nt">preamble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;!channel&gt;</span>
+</span><span id="__span-7-6"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-7-7"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-7-8"><span class="w">      </span><span class="no">{#- Get the API name from alarm dimensions -#}</span>
+</span><span id="__span-7-9"><span class="w">      </span><span class="no">{%- set api=(data.Trigger.Dimensions | selectattr(&#39;name&#39;, &#39;equalto&#39;, &#39;ApiName&#39;) | first) or {&#39;value&#39;: &#39;?&#39;} -%}</span>
+</span><span id="__span-7-10"><span class="w">      </span><span class="no">{#- Get a Python re.Match object for the event counts from the alarm reason -#}</span>
+</span><span id="__span-7-11"><span class="w">      </span><span class="no">{%- set m=re.search(&#39;\[[^]]*\]&#39;, data.NewStateReason) -%}</span>
+</span><span id="__span-7-12">
+</span><span id="__span-7-13"><span class="w">      </span><span class="no">:red_circle:</span>
+</span><span id="__span-7-14"><span class="w">      </span><span class="no">*{{ data.AlarmName }}*</span>
+</span><span id="__span-7-15"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-7-16"><span class="w">      </span><span class="no">{{ api.value }}</span>
+</span><span id="__span-7-17"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-7-18"><span class="w">      </span><span class="no">{{ data.StateChangeTime.split(&#39;.&#39;)[0] }}Z</span>
+</span><span id="__span-7-19">
+</span><span id="__span-7-20">
+</span><span id="__span-7-21"><span class="w">      </span><span class="no">{% if m -%}</span>
+</span><span id="__span-7-22"><span class="w">      </span><span class="no">{#- Get rid of the timetamps in the clause containing event counts -#}</span>
+</span><span id="__span-7-23"><span class="w">      </span><span class="no">{%- set counts=re.sub(&#39; *\([^)]*\)&#39;,&#39;&#39;,m.group(0)) -%}</span>
+</span><span id="__span-7-24"><span class="w">      </span><span class="no">*Count {{ counts }} &gt; {{ data.Trigger.Threshold | int }}*{% endif %}</span>
+</span><span id="__span-7-25"><span class="w">      </span><span class="no">{%- if data.AlarmDescription %}</span>
+</span><span id="__span-7-26">
+</span><span id="__span-7-27">
+</span><span id="__span-7-28"><span class="w">      </span><span class="no">_{{ data.AlarmDescription }}_{% endif %}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/cwatch-api-gw-alarm-on.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<h2 id="ec2-events">EC2 Events<a class="headerlink" href="#ec2-events" title="Permanent link">&para;</a></h2>
+<details>
+<summary>Auto Scaling Instance Launch</summary>
+<p>These events occur when an auto scaling group launches new instances. It is
+sometimes handy to know about this but rarely interesting enough to page
+someone. What is not handy is 50 lines of JSON bumph spewing into your
+operations Slack channel when an instance launches.</p>
+<p>Slacker is a good fit for these messages.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><input id="__tabbed_5_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Message</label><label for="__tabbed_5_2">Rule</label><label for="__tabbed_5_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><span class="p">{</span>
+</span><span id="__span-8-2"><span class="w">  </span><span class="nt">&quot;Origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC2&quot;</span><span class="p">,</span>
+</span><span id="__span-8-3"><span class="w">  </span><span class="nt">&quot;Destination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AutoScalingGroup&quot;</span><span class="p">,</span>
+</span><span id="__span-8-4"><span class="w">  </span><span class="nt">&quot;Progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+</span><span id="__span-8-5"><span class="w">  </span><span class="nt">&quot;AccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-8-6"><span class="w">  </span><span class="nt">&quot;Description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Launching a new EC2 instance: i-01918b2230392f631&quot;</span><span class="p">,</span>
+</span><span id="__span-8-7"><span class="w">  </span><span class="nt">&quot;RequestId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;59864e62-e212-6604-627d-5ac06f09f7ec&quot;</span><span class="p">,</span>
+</span><span id="__span-8-8"><span class="w">  </span><span class="nt">&quot;EndTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:27:35.517Z&quot;</span><span class="p">,</span>
+</span><span id="__span-8-9"><span class="w">  </span><span class="nt">&quot;AutoScalingGroupARN&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:autoscaling:ap-southeast-2:123456789012:autoScalingGroup:8dc6c859-8cbd-4549-94f1-72678f7a5a0a:autoScalingGroupName/my-asg&quot;</span><span class="p">,</span>
+</span><span id="__span-8-10"><span class="w">  </span><span class="nt">&quot;ActivityId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;59864e62-e212-6604-627d-5ac06f09f7ec&quot;</span><span class="p">,</span>
+</span><span id="__span-8-11"><span class="w">  </span><span class="nt">&quot;StartTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:27:29.689Z&quot;</span><span class="p">,</span>
+</span><span id="__span-8-12"><span class="w">  </span><span class="nt">&quot;Service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS Auto Scaling&quot;</span><span class="p">,</span>
+</span><span id="__span-8-13"><span class="w">  </span><span class="nt">&quot;Time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:27:35.517Z&quot;</span><span class="p">,</span>
+</span><span id="__span-8-14"><span class="w">  </span><span class="nt">&quot;EC2InstanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i-01918b2230392f631&quot;</span><span class="p">,</span>
+</span><span id="__span-8-15"><span class="w">  </span><span class="nt">&quot;StatusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;InProgress&quot;</span><span class="p">,</span>
+</span><span id="__span-8-16"><span class="w">  </span><span class="nt">&quot;StatusMessage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-8-17"><span class="w">  </span><span class="nt">&quot;Details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-18"><span class="w">    </span><span class="nt">&quot;Subnet ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subnet-abcdefab&quot;</span><span class="p">,</span>
+</span><span id="__span-8-19"><span class="w">    </span><span class="nt">&quot;Availability Zone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ap-southeast-2b&quot;</span><span class="p">,</span>
+</span><span id="__span-8-20"><span class="w">    </span><span class="nt">&quot;InvokingAlarms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-8-21"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-8-22"><span class="w">        </span><span class="nt">&quot;AlarmArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8&quot;</span><span class="p">,</span>
+</span><span id="__span-8-23"><span class="w">        </span><span class="nt">&quot;Trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-24"><span class="w">          </span><span class="nt">&quot;MetricName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WorkerBacklog&quot;</span><span class="p">,</span>
+</span><span id="__span-8-25"><span class="w">          </span><span class="nt">&quot;EvaluateLowSampleCountPercentile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-8-26"><span class="w">          </span><span class="nt">&quot;ComparisonOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GreaterThanThreshold&quot;</span><span class="p">,</span>
+</span><span id="__span-8-27"><span class="w">          </span><span class="nt">&quot;TreatMissingData&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-8-28"><span class="w">          </span><span class="nt">&quot;Statistic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AVERAGE&quot;</span><span class="p">,</span>
+</span><span id="__span-8-29"><span class="w">          </span><span class="nt">&quot;StatisticType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Statistic&quot;</span><span class="p">,</span>
+</span><span id="__span-8-30"><span class="w">          </span><span class="nt">&quot;Period&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+</span><span id="__span-8-31"><span class="w">          </span><span class="nt">&quot;EvaluationPeriods&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-8-32"><span class="w">          </span><span class="nt">&quot;Unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-8-33"><span class="w">          </span><span class="nt">&quot;Namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span><span class="p">,</span>
+</span><span id="__span-8-34"><span class="w">          </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span>
+</span><span id="__span-8-35"><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-8-36"><span class="w">        </span><span class="nt">&quot;AlarmName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8&quot;</span><span class="p">,</span>
+</span><span id="__span-8-37"><span class="w">        </span><span class="nt">&quot;AlarmDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:ap-southeast-2:123456789012:scalingPolicy:a2c49e03-5a24-4a34-93a6-4d1aab48ad6d:autoScalingGroupName/my-asg:policyName/my-asg-asgWorkerScalingPolicy-crdTF9&quot;</span><span class="p">,</span>
+</span><span id="__span-8-38"><span class="w">        </span><span class="nt">&quot;AWSAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-8-39"><span class="w">        </span><span class="nt">&quot;OldStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-8-40"><span class="w">        </span><span class="nt">&quot;Region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Asia Pacific (Sydney)&quot;</span><span class="p">,</span>
+</span><span id="__span-8-41"><span class="w">        </span><span class="nt">&quot;NewStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-8-42"><span class="w">        </span><span class="nt">&quot;AlarmConfigurationUpdatedTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1732249141214</span><span class="p">,</span>
+</span><span id="__span-8-43"><span class="w">        </span><span class="nt">&quot;StateChangeTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1733433742189</span>
+</span><span id="__span-8-44"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-8-45"><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-8-46"><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-8-47"><span class="w">  </span><span class="nt">&quot;AutoScalingGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-asg&quot;</span><span class="p">,</span>
+</span><span id="__span-8-48"><span class="w">  </span><span class="nt">&quot;Cause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;At 2024-12-05T21:27:22Z a monitor alarm TargetTracking-my-asg-AlarmHigh-1bd75141-14b2-4f14-ad2b-6d26ea7c94a8 in state ALARM triggered policy my-asg-asgWorkerScalingPolicy-crdTF9lGieul changing the desired capacity from 2 to 3.  At 2024-12-05T21:27:28Z an instance was started in response to a difference between desired and actual capacity, increasing the capacity from 2 to 3.&quot;</span><span class="p">,</span>
+</span><span id="__span-8-49"><span class="w">  </span><span class="nt">&quot;Event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;autoscaling:EC2_INSTANCE_LAUNCH&quot;</span>
+</span><span id="__span-8-50"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>The same rule handles both launch and termination events.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-9-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Auto scaling launch / termination</span>
+</span><span id="__span-9-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.Service</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;AWS</span><span class="nv"> </span><span class="s">Auto</span><span class="nv"> </span><span class="s">Scaling&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-9-4"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-9-5"><span class="w">      </span><span class="no">{% set icons = {</span>
+</span><span id="__span-9-6"><span class="w">        </span><span class="no">&#39;autoscaling:EC2_INSTANCE_LAUNCH&#39;: &#39;:arrow_heading_up:&#39;,</span>
+</span><span id="__span-9-7"><span class="w">        </span><span class="no">&#39;autoscaling:EC2_INSTANCE_TERMINATE&#39;: &#39;:arrow_heading_down:&#39;,</span>
+</span><span id="__span-9-8"><span class="w">      </span><span class="no">} %}</span>
+</span><span id="__span-9-9"><span class="w">      </span><span class="no">{%- set sep = &#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-9-10"><span class="w">      </span><span class="no">{{- icons.get(data.Event, data.Event.split(&#39;:&#39;)[-1]) }}</span>
+</span><span id="__span-9-11"><span class="w">      </span><span class="no">*{{ data.AutoScalingGroupName }}*</span>
+</span><span id="__span-9-12"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-9-13"><span class="w">      </span><span class="no">{{ data.EC2InstanceId }}</span>
+</span><span id="__span-9-14"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-9-15"><span class="w">      </span><span class="no">{{ data.StartTime.split(&#39;.&#39;)[0] }}Z</span>
+</span><span id="__span-9-16">
+</span><span id="__span-9-17"><span class="w">      </span><span class="no">_{{ data.StatusCode }}_</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/ec2-autoscaling-launch.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary>Auto Scaling Instance Termination</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:3"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><input id="__tabbed_6_3" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Message</label><label for="__tabbed_6_2">Rule</label><label for="__tabbed_6_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><span class="p">{</span>
+</span><span id="__span-10-2"><span class="w">  </span><span class="nt">&quot;Origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AutoScalingGroup&quot;</span><span class="p">,</span>
+</span><span id="__span-10-3"><span class="w">  </span><span class="nt">&quot;Destination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC2&quot;</span><span class="p">,</span>
+</span><span id="__span-10-4"><span class="w">  </span><span class="nt">&quot;Progress&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+</span><span id="__span-10-5"><span class="w">  </span><span class="nt">&quot;AccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-10-6"><span class="w">  </span><span class="nt">&quot;Description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Terminating EC2 instance: i-0bc09f781ddd6f516&quot;</span><span class="p">,</span>
+</span><span id="__span-10-7"><span class="w">  </span><span class="nt">&quot;RequestId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f6c642e2-21ec-4bcb-a28e-892808bfa29e&quot;</span><span class="p">,</span>
+</span><span id="__span-10-8"><span class="w">  </span><span class="nt">&quot;EndTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:50:47.987Z&quot;</span><span class="p">,</span>
+</span><span id="__span-10-9"><span class="w">  </span><span class="nt">&quot;AutoScalingGroupARN&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:autoscaling:ap-southeast-2:123456789012:autoScalingGroup:8dc6c859-8cbd-4549-94f1-72678f7a5a0a:autoScalingGroupName/my-asg&quot;</span><span class="p">,</span>
+</span><span id="__span-10-10"><span class="w">  </span><span class="nt">&quot;ActivityId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f6c642e2-21ec-4bcb-a28e-892808bfa29e&quot;</span><span class="p">,</span>
+</span><span id="__span-10-11"><span class="w">  </span><span class="nt">&quot;StartTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:48:52.881Z&quot;</span><span class="p">,</span>
+</span><span id="__span-10-12"><span class="w">  </span><span class="nt">&quot;Service&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS Auto Scaling&quot;</span><span class="p">,</span>
+</span><span id="__span-10-13"><span class="w">  </span><span class="nt">&quot;Time&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-12-05T21:50:47.988Z&quot;</span><span class="p">,</span>
+</span><span id="__span-10-14"><span class="w">  </span><span class="nt">&quot;EC2InstanceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;i-0bc09f781ddd6f516&quot;</span><span class="p">,</span>
+</span><span id="__span-10-15"><span class="w">  </span><span class="nt">&quot;StatusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MidTerminatingLifecycleAction&quot;</span><span class="p">,</span>
+</span><span id="__span-10-16"><span class="w">  </span><span class="nt">&quot;StatusMessage&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-10-17"><span class="w">  </span><span class="nt">&quot;Details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-18"><span class="w">    </span><span class="nt">&quot;Subnet ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subnet-abcdefab&quot;</span><span class="p">,</span>
+</span><span id="__span-10-19"><span class="w">    </span><span class="nt">&quot;Availability Zone&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ap-southeast-2c&quot;</span><span class="p">,</span>
+</span><span id="__span-10-20"><span class="w">    </span><span class="nt">&quot;InvokingAlarms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-10-21"><span class="w">      </span><span class="p">{</span>
+</span><span id="__span-10-22"><span class="w">        </span><span class="nt">&quot;AlarmArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:TargetTracking-my-asg-AlarmLow-7a95c75c-aaf8-482d-9516-90723ad7ea91&quot;</span><span class="p">,</span>
+</span><span id="__span-10-23"><span class="w">        </span><span class="nt">&quot;Trigger&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-24"><span class="w">          </span><span class="nt">&quot;MetricName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;WorkerBacklog&quot;</span><span class="p">,</span>
+</span><span id="__span-10-25"><span class="w">          </span><span class="nt">&quot;EvaluateLowSampleCountPercentile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-10-26"><span class="w">          </span><span class="nt">&quot;ComparisonOperator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LessThanThreshold&quot;</span><span class="p">,</span>
+</span><span id="__span-10-27"><span class="w">          </span><span class="nt">&quot;TreatMissingData&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-10-28"><span class="w">          </span><span class="nt">&quot;Statistic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AVERAGE&quot;</span><span class="p">,</span>
+</span><span id="__span-10-29"><span class="w">          </span><span class="nt">&quot;StatisticType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Statistic&quot;</span><span class="p">,</span>
+</span><span id="__span-10-30"><span class="w">          </span><span class="nt">&quot;Period&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+</span><span id="__span-10-31"><span class="w">          </span><span class="nt">&quot;EvaluationPeriods&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+</span><span id="__span-10-32"><span class="w">          </span><span class="nt">&quot;Unit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+</span><span id="__span-10-33"><span class="w">          </span><span class="nt">&quot;Namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MyApp&quot;</span><span class="p">,</span>
+</span><span id="__span-10-34"><span class="w">          </span><span class="nt">&quot;Threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span>
+</span><span id="__span-10-35"><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-10-36"><span class="w">        </span><span class="nt">&quot;AlarmName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TargetTracking-my-asg-AlarmLow-7a95c75c-aaf8-482d-9516-90723ad7ea91&quot;</span><span class="p">,</span>
+</span><span id="__span-10-37"><span class="w">        </span><span class="nt">&quot;AlarmDescription&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:ap-southeast-2:123456789012:scalingPolicy:a2c49e03-5a24-4a34-93a6-4d1aab48ad6d:autoScalingGroupName/my-asg:policyName/my-asg-asgWorkerScalingPolicy-crdTF9&quot;</span><span class="p">,</span>
+</span><span id="__span-10-38"><span class="w">        </span><span class="nt">&quot;AWSAccountId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+</span><span id="__span-10-39"><span class="w">        </span><span class="nt">&quot;OldStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-10-40"><span class="w">        </span><span class="nt">&quot;Region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Asia Pacific (Sydney)&quot;</span><span class="p">,</span>
+</span><span id="__span-10-41"><span class="w">        </span><span class="nt">&quot;NewStateValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ALARM&quot;</span><span class="p">,</span>
+</span><span id="__span-10-42"><span class="w">        </span><span class="nt">&quot;AlarmConfigurationUpdatedTimestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1732250795584</span><span class="p">,</span>
+</span><span id="__span-10-43"><span class="w">        </span><span class="nt">&quot;StateChangeTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1733435027153</span>
+</span><span id="__span-10-44"><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-10-45"><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-10-46"><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-10-47"><span class="w">  </span><span class="nt">&quot;AutoScalingGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-asg&quot;</span><span class="p">,</span>
+</span><span id="__span-10-48"><span class="w">  </span><span class="nt">&quot;Cause&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;At 2024-12-05T21:48:47Z a monitor alarm TargetTracking-my-asg-AlarmLow-7a95c75c-aaf8-482d-9516-90723ad7ea91 in state ALARM triggered policy my-asg-asgWorkerScalingPolicy-crdTF9lGieul changing the desired capacity from 2 to 1.  At 2024-12-05T21:48:52Z an instance was taken out of service in response to a difference between desired and actual capacity, shrinking the capacity from 2 to 1.  At 2024-12-05T21:48:52Z instance i-0bc09f781ddd6f516 was selected for termination.&quot;</span><span class="p">,</span>
+</span><span id="__span-10-49"><span class="w">  </span><span class="nt">&quot;Event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;autoscaling:EC2_INSTANCE_TERMINATE&quot;</span>
+</span><span id="__span-10-50"><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>The same rule is used to handle both auto scaling launches and terminations.</p>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/ec2-autoscaling-termination.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<h2 id="general-purpose-rules">General Purpose Rules<a class="headerlink" href="#general-purpose-rules" title="Permanent link">&para;</a></h2>
+<details>
+<summary>JSON Formatting</summary>
+<p>Lot's of AWS events show up in (densely packed) JSON format. A handy rule of
+last resort simply formats the JSON nicely before passing it to Slack.</p>
+<p>This rule should generally go low in the rules list. It will not touch
+messages that are not JSON.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:3"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><input id="__tabbed_7_3" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Message</label><label for="__tabbed_7_2">Rule</label><label for="__tabbed_7_3">Result</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><span class="p">{</span><span class="nt">&quot;a&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;c&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;b&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;beta&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:[</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;etc&quot;</span><span class="p">]}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-12-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-12-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pretty print messages consisting of JSON</span>
+</span><span id="__span-12-3"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-12-4"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-12-5"><span class="w">      </span><span class="no">{{ data | tojson(4) }}</span>
+</span><span id="__span-12-6"><span class="w">      </span><span class="no">```</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p><img alt="" src="img/samples/json.png" /></p>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary>Wildcard Webhook Rules</summary>
+<p>The <a href="02-how-it-works.html#the-wildcard-webhook">wildcard webhook</a> is a special purpose
+<a href="02-how-it-works.html#the-webhooks-table">webhooks table</a> entry with a <code>sourceId</code> of <code>*</code>. Any rules
+in the wildcard webhook are implicitly added to the end of the rules list for
+all other webhooks. It is a good place for common rules that would otherwise
+need to be duplicated in individual webhooks.</p>
+<p>The following sample can be modified as needed.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:1"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Rule</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><span class="nt">sourceId</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;*&#39;</span>
+</span><span id="__span-13-2"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-13-3"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS Health Event</span>
+</span><span id="__span-13-4"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data[&#39;detail-type&#39;]</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;AWS</span><span class="nv"> </span><span class="s">Health</span><span class="nv"> </span><span class="s">Event&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-13-5"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+</span><span id="__span-13-6"><span class="w">      </span><span class="no">{% set icons = {</span>
+</span><span id="__span-13-7"><span class="w">         </span><span class="no">&#39;scheduledChange&#39;: &#39;:calendar:&#39;,</span>
+</span><span id="__span-13-8"><span class="w">         </span><span class="no">&#39;issue&#39;: &#39;:zap:&#39;,</span>
+</span><span id="__span-13-9"><span class="w">         </span><span class="no">&#39;accountNotification&#39;: &#39;:information_source:&#39;,</span>
+</span><span id="__span-13-10"><span class="w">         </span><span class="no">&#39;investigation&#39;: &#39;:magnifying_glass_right:&#39;,</span>
+</span><span id="__span-13-11"><span class="w">       </span><span class="no">} %}</span>
+</span><span id="__span-13-12"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-13-13"><span class="w">      </span><span class="no">{{ icons.get(data.detail.eventTypeCategory, &#39;:large_purple_circle:&#39;) }}</span>
+</span><span id="__span-13-14"><span class="w">      </span><span class="no">*{{ data.detail.eventTypeCode }}*</span>
+</span><span id="__span-13-15"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-13-16"><span class="w">      </span><span class="no">{{ data.detail.eventTypeCategory }}</span>
+</span><span id="__span-13-17">
+</span><span id="__span-13-18"><span class="w">      </span><span class="no">*{{ data.detail.startTime }} ... {{ data.detail.endTime }}*</span>
+</span><span id="__span-13-19">
+</span><span id="__span-13-20"><span class="w">      </span><span class="no">{% if data.resources -%}</span>
+</span><span id="__span-13-21"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-13-22">
+</span><span id="__span-13-23"><span class="w">      </span><span class="no">{% for resource in data.resources %}</span>
+</span><span id="__span-13-24"><span class="w">      </span><span class="no">* {{ resource }}</span>
+</span><span id="__span-13-25">
+</span><span id="__span-13-26"><span class="w">      </span><span class="no">{% endfor -%}</span>
+</span><span id="__span-13-27"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-13-28"><span class="w">      </span><span class="no">{% endif %}</span>
+</span><span id="__span-13-29">
+</span><span id="__span-13-30"><span class="w">      </span><span class="no">{{ (data.detail.eventDescription | first).latestDescription | replace(&#39;\\n&#39;, &#39;\n&#39;)  }}</span>
+</span><span id="__span-13-31">
+</span><span id="__span-13-32"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudWatch Alarm ON</span>
+</span><span id="__span-13-33"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.NewStateValue</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;ALARM&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-13-34"><span class="w">    </span><span class="nt">colour</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#ff0000&#39;</span>
+</span><span id="__span-13-35"><span class="w">    </span><span class="nt">preamble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;!channel&gt;</span>
+</span><span id="__span-13-36"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-13-37"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-13-38"><span class="w">      </span><span class="no">{%- set desc=(data.AlarmDescription or data.AlarmName or &#39;?&#39;).splitlines() -%}</span>
+</span><span id="__span-13-39">
+</span><span id="__span-13-40"><span class="w">      </span><span class="no">:red_circle:</span>
+</span><span id="__span-13-41"><span class="w">      </span><span class="no">*{{ desc[0].strip() }}*</span>
+</span><span id="__span-13-42"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-13-43"><span class="w">      </span><span class="no">{{ data.StateChangeTime.split(&#39;.&#39;)[0] }}Z</span>
+</span><span id="__span-13-44"><span class="w">      </span><span class="no">{%- if desc | length &gt; 1 %}</span>
+</span><span id="__span-13-45">
+</span><span id="__span-13-46">
+</span><span id="__span-13-47"><span class="w">      </span><span class="no">{{ data.AlarmDescription }}{%endif %}</span>
+</span><span id="__span-13-48">
+</span><span id="__span-13-49">
+</span><span id="__span-13-50"><span class="w">      </span><span class="no">_{{ data.NewStateReason }}_</span>
+</span><span id="__span-13-51">
+</span><span id="__span-13-52"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CloudWatch Alarm OFF</span>
+</span><span id="__span-13-53"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">data.NewStateValue</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;OK&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</span><span id="__span-13-54"><span class="w">    </span><span class="nt">colour</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;#00ff00&#39;</span>
+</span><span id="__span-13-55"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+</span><span id="__span-13-56"><span class="w">      </span><span class="no">{%- set sep=&#39;:black_small_square:&#39; -%}</span>
+</span><span id="__span-13-57"><span class="w">      </span><span class="no">{%- set desc=(data.AlarmDescription or data.AlarmName or &#39;?&#39;).splitlines() -%}</span>
+</span><span id="__span-13-58">
+</span><span id="__span-13-59"><span class="w">      </span><span class="no">:white_check_mark:</span>
+</span><span id="__span-13-60"><span class="w">      </span><span class="no">*{{ desc[0].strip() }}*</span>
+</span><span id="__span-13-61"><span class="w">      </span><span class="no">{{ sep }}</span>
+</span><span id="__span-13-62"><span class="w">      </span><span class="no">{{ data.StateChangeTime.split(&#39;.&#39;)[0] }}Z</span>
+</span><span id="__span-13-63">
+</span><span id="__span-13-64"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pretty print messages consisting of JSON</span>
+</span><span id="__span-13-65"><span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-13-66"><span class="w">      </span><span class="no">```</span>
+</span><span id="__span-13-67"><span class="w">      </span><span class="no">{{ data | tojson(4) }}</span>
+</span><span id="__span-13-68"><span class="w">      </span><span class="no">```</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; Origin Energy 2025
+    </div>
+  
+</div>
+      <div class="md-footer-social">
+        <div class="md-copyright">
+          <div class="md-copyright__highlight">
+            v2.6.0
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
