@@ -113,7 +113,7 @@ pypi:	_venv_is_on ~/.pypirc pkg
 
 # ------------------------------------------------------------------------------
 # Documentation targets
-doc preview publish:
+doc preview publish: _venv_is_on
 	$(MAKE) -C doc $(MAKECMDGOALS) dist=$(abspath dist)
 
 spell:

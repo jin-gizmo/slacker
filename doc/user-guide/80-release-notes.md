@@ -3,6 +3,33 @@
 
 ## Version 2
 
+#### Version 2.7.0
+
+*   Added the following new [Jinja rendering parameters](#jinja-rendering):
+
+    *   `aws.account_name` : AWS account name / alias
+    *   `aws.region`: AWS region name
+    *   `link`: Generate a hyperlink in Slack compatible syntax
+    *   `msg`: An object containing attributes associated with the
+        incoming message.
+
+*   The `match` attribute in the [webhooks](#the-webhooks-table) table now
+    accepts patterns with unnamed capture groups, and without any capture groups,
+    in addition to the previous behaviour of named capture groups. See
+    [Regular Expressions in Rules](#regular-expressions-in-rules).
+
+*   Added the `slackerId` into logged messages to enable the original message to
+    be easily traced. See [Message Logging](#message-logging).
+
+*   Updated the Slack message footer to indicate the AWS account, region and
+    `slackerId` for incoming messages.
+
+*   The `slacker put` command used to deploy [webhooks](#the-webhooks-table)
+    now restarts the slacker Lambda to empty the internal webhook cache. See
+    [Deploying Rules](#deploying-rules) for more information.
+
+*   Added more of the test cases into the repo.
+
 #### Version 2.6.0
 
 This version is functionally compatible with v2.5 insofar as the main code is

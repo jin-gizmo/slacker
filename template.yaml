@@ -64,7 +64,11 @@ Parameters:
     Description: Log incoming messages to CloudWatch (0 = No, 1 = Yes)
     Type: Number
     AllowedValues: [ '0', '1' ]
-    Default: '0'
+    Default: '1'
+
+  awsAccountName:
+    Description: User friendly name of the AWS account (defaults to account alias)
+    Type: String
 
 Resources:
   lambdaSlacker:
@@ -84,6 +88,7 @@ Resources:
           SLACKER_COLOUR: !Ref defaultSideBarColour
           SLACKER_MSG_LEN: !Ref maxMessageLen
           LOG_MESSAGES: !Ref logIncomingMessages
+          AWS_ACCOUNT_NAME: !Ref awsAccountName
       Policies:
         - Version: '2012-10-17'
           Statement:
@@ -110,6 +115,9 @@ Resources:
               Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${AWS::StackName}.*'
             - Effect: Allow
               Action: 'sts:GetCallerIdentity'
+              Resource: '*'
+            - Effect: Allow
+              Action: 'iam:ListAccountAliases'
               Resource: '*'
     Metadata:
       BuildMethod: python3.13

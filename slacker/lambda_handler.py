@@ -4,16 +4,19 @@ from __future__ import annotations
 
 import json
 import os
+from itertools import chain
 from typing import Any
 
 import boto3
 
 from config import LOGLEVEL, LOGNAME, WILDCARD_SOURCE_ID
 from extractors import extract_event_messages
-from lib.slacker import SlackMsg, SlackerError, get_channel, get_webhook, log, process_msg_rules
+from lib.slacker import SlackerError, SlackerMsg, get_channel, get_webhook, log, process_msg_rules
 from lib.utils import json_default, setup_logging
 
 __author__ = 'Murray Andrews'
+
+LOG_MESSAGES = bool(int(os.environ.get('LOG_MESSAGES', 1)))
 
 
 # ------------------------------------------------------------------------------
@@ -45,20 +48,19 @@ def lambda_handler(event: dict[str, Any], context) -> None:
     except Exception as e:
         raise SlackerError(f'Cannot get DynamoDB table {channels_table_name} - {e}')
 
-    log_incoming_messages = bool(int(os.environ.get('LOG_MESSAGES', 0)))
-
     error_count = 0
     msg_count = 0
     for msg_count, record in enumerate(extract_event_messages(event), 1):  # noqa B007
-        if log_incoming_messages:
+        if LOG_MESSAGES:
             log.info(
                 json.dumps(
                     {
+                        'slackerId': record.slacker_id,
                         'type': 'incoming',
                         'sourceId': record.source_id,
                         'sourceName': record.source_name,
                         'subject': record.subject,
-                        'message': record.msg_object or record.message,
+                        'message': record.data or record.text,
                         'timestamp': record.timestamp,
                     },
                     sort_keys=True,
@@ -78,18 +80,18 @@ def lambda_handler(event: dict[str, Any], context) -> None:
 
 
 # ------------------------------------------------------------------------------
-def process_msg(msg: SlackMsg, webhooks_table, channels_table) -> None:
+def process_msg(msg: SlackerMsg, webhooks_table, channels_table) -> None:
     """Process a message intended for Slack."""
 
     webhook_info = get_webhook(msg.source_id, webhooks_table)
-    webhook_of_last_resort = get_webhook(WILDCARD_SOURCE_ID, webhooks_table)
-    common_rules = webhook_of_last_resort.get('rules', []) if webhook_of_last_resort else []
+    wildcard_webhook = get_webhook(WILDCARD_SOURCE_ID, webhooks_table)
+    common_rules = wildcard_webhook.get('rules', []) if wildcard_webhook else []
 
     if webhook_info:
-        webhook_info.setdefault('rules', [])
-        webhook_info['rules'].extend(common_rules)
+        rules = chain(webhook_info.setdefault('rules', []), common_rules)
     else:
-        webhook_info = webhook_of_last_resort
+        webhook_info = wildcard_webhook
+        rules = common_rules
 
     if not webhook_info:
         raise SlackerError(f'Missing webhook for {msg.source_id}')
@@ -98,12 +100,12 @@ def process_msg(msg: SlackMsg, webhooks_table, channels_table) -> None:
         log.info('Dropping message "%s" - webhook not enabled', msg.subject)
         return
 
-    process_msg_rules(msg, webhook_info.get('rules', []))
-    if not msg.message:
+    process_msg_rules(msg, rules)
+    if not msg.text:
         return
 
     url = {}
-    # A channel can be specified not at all, or at the webhook parent # entry,
+    # A channel can be specified not at all, or at the webhook parent entry,
     # or at the level of the effective rule. The latter takes precedence. If no
     # channel is specified, a url must specified at the webhook level.
     channel = msg.channel or webhook_info.get('channel')
@@ -115,4 +117,7 @@ def process_msg(msg: SlackMsg, webhooks_table, channels_table) -> None:
         except KeyError:
             raise SlackerError(f'Channel entry for {channel} has no url')
         url = {'url': url}
-    msg.send(webhook_info | url)
+    # If the messages are being logged we include the slackerId to enabled them
+    # to be looked up in the /aws/lambda/slacker log group. If we're not logging
+    # messages, the slackerId has no relevance.
+    msg.send(webhook_info | url, include_slacker_id=LOG_MESSAGES)

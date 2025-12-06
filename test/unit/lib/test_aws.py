@@ -2,7 +2,8 @@
 
 import pytest
 
-from lib.aws import *
+from lib import aws
+from slacker.lib.aws import *
 
 
 # ------------------------------------------------------------------------------
@@ -61,3 +62,10 @@ def test_arn_bad_attribute_fail():
 def test_arn_bad_fail(arn):
     with pytest.raises(ValueError, match='Bad ARN'):
         Arn(arn)
+
+
+# ------------------------------------------------------------------------------
+def test_account_name_env_var(monkeypatch):
+    monkeypatch.setenv('AWS_ACCOUNT_NAME', 'whatever')
+    # We need to bypass the cache in case it was populated in an earlier test.
+    assert aws.account_name.__wrapped__() == 'whatever'

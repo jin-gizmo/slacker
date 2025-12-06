@@ -1,0 +1,5 @@
+$schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+
+sourceId: whatever
+channel: test
+url: https://example.com

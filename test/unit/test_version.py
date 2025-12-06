@@ -2,7 +2,7 @@
 
 from subprocess import run
 
-import version
+import slacker.version as version
 
 
 def test_version():

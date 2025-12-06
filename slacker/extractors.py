@@ -8,7 +8,7 @@ from logging import getLogger
 from typing import Any
 
 from config import LOGNAME
-from lib.slacker import SlackMsg, SlackerError
+from lib.slacker import SlackerError, SlackerMsg
 from lib.utils import iso8601_to_ts, zip64_decode_data
 
 log = getLogger(LOGNAME)
@@ -17,7 +17,7 @@ __author__ = 'Murray Andrews'
 
 
 # ------------------------------------------------------------------------------
-def extract_cloudwatch_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
+def extract_cloudwatch_messages(event: dict[str, Any]) -> Iterator[SlackerMsg]:
     """
      Extract CloudWatch log messages into a canonical format.
 
@@ -47,17 +47,17 @@ def extract_cloudwatch_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
     log_group = payload['logGroup']
     log_stream = payload['logStream']
     for record in payload['logEvents']:
-        yield SlackMsg(
+        yield SlackerMsg(
             source_id=f'logs:{log_group}',
             source_name=f'Log:{log_group}',
             subject=f'{log_group} / {log_stream}',
-            message=record['message'],
+            text=record['message'],
             timestamp=record['timestamp'] // 1000,
         )
 
 
 # ------------------------------------------------------------------------------
-def extract_sns_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
+def extract_sns_messages(event: dict[str, Any]) -> Iterator[SlackerMsg]:
     """
     Sample event data.
 
@@ -93,17 +93,17 @@ def extract_sns_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
             raise SlackerError(f'Unexpected event source: {event_source}')
 
         topic_arn = record['Sns']['TopicArn']  # type: str
-        yield SlackMsg(
+        yield SlackerMsg(
             source_id=topic_arn,
             source_name='SNS:' + topic_arn.rsplit(':', 1)[1],
             subject=record['Sns']['Subject'],
-            message=record['Sns']['Message'],
+            text=record['Sns']['Message'],
             timestamp=iso8601_to_ts(record['Sns']['Timestamp']),
         )
 
 
 # ------------------------------------------------------------------------------
-def extract_eventbridge_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
+def extract_eventbridge_messages(event: dict[str, Any]) -> Iterator[SlackerMsg]:
     """
     Extract raw EventBridge messages.
 
@@ -117,7 +117,7 @@ def extract_eventbridge_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
     except Exception:
         ts = time.time()
 
-    yield SlackMsg.from_object(
+    yield SlackerMsg.from_object(
         event,
         source_id=f'events:{event.get("source", "?")}',
         source_name=f'EventBridge:{event.get("source", "?")}',
@@ -127,7 +127,7 @@ def extract_eventbridge_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
 
 
 # ------------------------------------------------------------------------------
-def extract_custom_object_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
+def extract_custom_object_messages(event: dict[str, Any]) -> Iterator[SlackerMsg]:
     """
     Extract custom object messages.
 
@@ -145,7 +145,7 @@ def extract_custom_object_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
     except KeyError:
         raise SlackerError(f'Unknown event type: {event}')
 
-    yield SlackMsg.from_object(
+    yield SlackerMsg.from_object(
         event,
         source_id=source_id,
         source_name=event.get('SlackerSourceName', source_id),
@@ -155,7 +155,7 @@ def extract_custom_object_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
 
 
 # ------------------------------------------------------------------------------
-def extract_event_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
+def extract_event_messages(event: dict[str, Any]) -> Iterator[SlackerMsg]:
     """Extract messages from events data which may come from various AWS sources."""
 
     match event:
@@ -163,9 +163,9 @@ def extract_event_messages(event: dict[str, Any]) -> Iterator[SlackMsg]:
             yield from extract_cloudwatch_messages(event)
         case {'Records': _}:
             yield from extract_sns_messages(event)
-        case {'detail-type': _, 'detail': _}:
-            yield from extract_eventbridge_messages(event)
         case {'SlackerSourceId': _}:
             yield from extract_custom_object_messages(event)
+        case {'detail-type': _, 'detail': _}:
+            yield from extract_eventbridge_messages(event)
         case _:
             raise SlackerError(f'Unknown event type: {event}')

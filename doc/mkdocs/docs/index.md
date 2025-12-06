@@ -4,7 +4,7 @@
 <div style="text-align: center;">
   <img src="img/slacker-icon.png" alt="Slacker Logo" 
        alt="Slacker Logo" 
-       width="150" 
+       width="120px" 
        height="auto"
        class="slacker-logo">
 </div>
@@ -18,7 +18,7 @@ data lake environment.
 
 === "Turn this ..."
     <div align="center">
-        <img src="img/json-mess.png" alt="JSON mess" width="auto" height="200px">
+        <img src="img/json-mess.png" alt="JSON mess" width="80%" height="auto">
     </div>
 
 === "Into this ..."

@@ -29,20 +29,24 @@ The definitions are available at:
 
 === "Latest"
     ```text
-    https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json
-    https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+    https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.yaml
+    https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml
     ```
 
 === "Versioned"
     ```text
-    https://jin-gizmo.github.io/slacker/schemas/v2/channel.schema.json
-    https://jin-gizmo.github.io/slacker/schemas/v2/webhook.schema.json
+    https://jin-gizmo.github.io/slacker/schemas/v2/channel.schema.yaml
+    https://jin-gizmo.github.io/slacker/schemas/v2/webhook.schema.yaml
     ```
+
+!!! note
+    JSON formatted versions of the schemas are also available. Just replace
+    `.yaml` with `.json`.
 
 These schemas are referenced in the entries like so:
 
 ```yaml
-$schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+$schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml
 ```
 
 !!! note
@@ -62,9 +66,15 @@ slacker test webhook-entry.yaml < message.txt
 slacker test webhook-entry.yaml < message.json
 ```
 
-This will apply exactly the same processing to the test message as the slacker
-Lambda will, showing the resulting message that will be sent, if any.
+This will apply *almost* exactly the same processing to the test message as the
+slacker Lambda will, showing the resulting message that will be sent, if any.
 Additionally, full schema validation of the webhook entry will be performed.
+
+!!! info
+    The `slacker test` command does not automatically apply the
+    [wildcard webhook](#the-wildcard-webhook) when testing rules. It applies
+    only the webhook contents specified in the file argument. Test separately
+    against the [wildcard webhook](#the-wildcard-webhook) as required.
 
 The message file will contain *the actual message text that is sent* (which
 slacker will decode as JSON if it can).
@@ -94,11 +104,11 @@ slacker put --backup webhook-entry-orig.yaml webhook-entry.yaml
 ```
 
 !!! note "Notes"
-    1.  Slacker caches webhook entries for 5 minutes. Table updates can take
-        this amount of time to become effective. The duration can be changed by
-        setting the [`SLACKER_CACHE_TTL`](#slacker-lambda-environment-variables)
-        environment variable. The `slacker restart` command can be used to
-        flush the caches.
+    1.  The slacker Lambda caches webhook entries for 5 minutes. By default,
+        `slacker put` will restart the slacker Lambda to flush the webhook
+        cache. If multiple webhooks are being deployed, use `slacker put
+        --no-restart`, followed by a `slacker restart` once deployments are
+        done.
     2.  The DynamoDB tables have point-in-time recovery enabled, just in case.
 
 ## Validating Webhook Entries

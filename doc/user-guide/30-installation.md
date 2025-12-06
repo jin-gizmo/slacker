@@ -19,6 +19,18 @@ SAM is not required for the slacker CLI.
     seem to support it. The rest of the world seem to manage OK(-ish) with PyPI
     for far more complex packages than SAM.  ¯\_(ツ)_/¯
 
+## Webhook Setup in Slack
+
+Slacker uses Slack's [incoming webhooks custom
+integration](https://docs.slack.dev/legacy/legacy-custom-integrations/legacy-custom-integrations-incoming-webhooks)
+mechanism to send messages. The management section for these can be found in
+Slack [here](https://www.slack.com/apps/manage/custom-integrations).
+
+There is nothing else you need to install in your workspace.
+
+!!! note
+    Token based webhooks are a legacy integration method but they work just fine.
+
 ## Installing the Slacker AWS Components { data-toc-label="AWS Components" }
 
 With AWS SAM installed, the installation / update process for slacker is as
@@ -59,30 +71,15 @@ relating to the CloudFormation stack mean:
 
 Other stack parameters are self-explanatory.
 
-### Logging
-
-If slacker is configured to log messages in CloudWatch, the log entries look
-like this:
-
-```json
-{
-  "message": "...",
-  "sourceId": "arn:aws:sns:us-east-1:...",
-  "sourceName": "SNS:...",
-  "subject": "Whatever",
-  "timestamp": 1749106337.055,
-  "type": "incoming"
-}
-```
-
 ### Slacker Lambda Environment Variables { data-toc-label="Environment Variables" }
 
 The slacker Lambda supports the following environment variables.
 
 |Name|Description|Default|
 |-|-|-|
+|AWS_ACCOUNT_NAME|An arbitrary label for the AWS account for human consumption.|AWS account alias|
 |LOGLEVEL|One of the standard Python logging levels (`debug`, `info`, ...).|`info`|
-|LOG_MESSAGES|If set to `1`, log messages to CloudWatch prior to processing.|`0`|
+|LOG_MESSAGES|If set to `1`, log messages to CloudWatch prior to processing. See [Message Logging](#message-logging).|`1`|
 |SLACKER_COLOUR|The default colour for the bar on the left hand margin of messages sent to Slack unless overridden for a given source ID in the [webhooks table](#the-webhooks-table). This can be any hex colour code or one of the Slack special values `good`, `warning` or `danger`.|`#bbbbbb`|
 |SLACKER_MSG_LEN|The maximum length in bytes of messages sent to Slacker. Longer messages are truncated.|4000|
 |SLACKER_CACHE_TTL|Number of seconds to cache lookups from the DynamoDB tables.|300|
@@ -195,8 +192,7 @@ To add a CloudWatch Log group as a slacker message source:
     per log group, which may limit your options.
 3.  Create a new entry in the [webhooks table](#the-webhooks-table) with the
     `sourceId` set to the log group name prefixed with `logs:`, and whatever
-    rules and destination Slack channel and [rules](#message-rules) are
-    appropriate.
+    destination Slack channel and [rules](#message-rules) are appropriate.
 
 !!! warning
     **Do not** connect the slacker Lambda log group `/aws/lambda/slacker` as a

@@ -5,11 +5,13 @@ from __future__ import annotations
 import json
 import logging
 import os
-from base64 import b64decode
-from datetime import datetime
+import secrets
+from base64 import b64decode, urlsafe_b64encode
+from datetime import UTC, datetime
 from decimal import Decimal
 from gzip import GzipFile
 from io import BytesIO
+from time import time_ns
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -204,3 +206,55 @@ class YamlIndentDumper(Dumper):
     def increase_indent(self, flow=False, indentless=False):
         """Correct indentation for yaml.dump."""
         return super().increase_indent(flow, False)
+
+
+# ------------------------------------------------------------------------------
+CUSTOM_EPOCH_NS = int(datetime(2025, 12, 1, tzinfo=UTC).timestamp()) * 1_000_000_000
+
+
+def short_oid(randomiser_length: int = 4) -> str:
+    """
+    Generate a compact, URL-safe object identifier.
+
+    This is based on the current timestamp with some random bytes appended, all
+    base64 encoded. It is not easily decodeable (not cryptographically strong,
+    just awkward).
+
+    .. warning::
+        This is NOT a general purpose replacement for a UUID. It is suitable for
+        use in a well defined context where the number of events per nanosecond
+        is not huge on a sustained basis.
+
+    .. warning::
+        This is NOT cryptographically secure and is not intended to be. Do NOT
+        use this for things like "unguessable URLs".
+
+    .. warning::
+        This will break one day deep in the future. You won't be here.
+
+    Comparison with a UUID:
+    *   It is a lot shorter than a UUID. With the default 5 byte randomiser the
+        result is 16 chars vs 36 for a UUID.
+    *   They are (mostly) sortable (modulo non-monotonicity in the clock)
+    *   A double click on a GUI selects the whole thing in one go.
+    *   Much much much easier to brute force in a security context
+        (i.e. not suitable).
+    *   Not as discriminating as a UUID for a 4 byte randomiser but not bad either.
+
+    :param randomiser_length:   The length of the randomiser. Default is 4 bytes
+                which gives pretty good discrimination for hundreds of events per
+                nanosecond. Set it to 8 to approximate a UUID.
+    :return:    A URL safe string.
+
+    """
+
+    timestamp_bytes = (time_ns() - CUSTOM_EPOCH_NS).to_bytes(8, 'big')
+    random_bytes = secrets.token_bytes(randomiser_length)
+    # We replace '-' with '_' to ensure the result is a single "word". Yes this causes
+    # some rare collisions bit it's really not a problem.
+    return (
+        urlsafe_b64encode(timestamp_bytes + random_bytes)
+        .decode('ascii')
+        .rstrip('=')
+        .replace('-', '_')
+    )

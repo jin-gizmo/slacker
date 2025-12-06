@@ -47,6 +47,14 @@ properties:
       specified by the value of this field. This can be any hex colour code
       (prefixed with '#') or one of the Slack special values `good`, `warning`,
       or `danger`.
+  # We tolerate this. More readable to accept both here instead of using "oneOf"
+  color:
+    $ref: '#/$defs/Colour'
+    description: >
+      Slack messages will have a color bar displayed down the left margin
+      specified by the value of this field. This can be any hex color code
+      (prefixed with '#') or one of the Slack special values `good`, `warning`,
+      or `danger`.
   enabled:
     type: boolean
     default: true
@@ -125,6 +133,10 @@ $defs:
         $ref: '#/$defs/Colour'
         description: >
           Override the default colour for the Slack sidebar.
+      color:
+        $ref: '#/$defs/Colour'
+        description: >
+          Override the default color for the Slack sidebar.
       preamble:
         type: string
         description: >

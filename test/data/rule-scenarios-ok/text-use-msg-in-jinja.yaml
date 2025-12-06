@@ -1,0 +1,14 @@
+# Test use of the "msg" object in Jinja rendering
+
+input: Hello world
+
+rules:
+  # This will match everything
+  - match: "."
+    if: '{{ data == "H" }}'
+    template: "{{ (msg | string)[0:5] }}, {{ msg.text.split()[0] | lower }}"
+    action: send
+
+  - action: drop
+
+output: "Hello, hello"

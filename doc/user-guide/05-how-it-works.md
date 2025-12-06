@@ -5,11 +5,12 @@ Slacker has a minimal AWS footprint, consisting of a Python-based AWS Lambda
 function and two small DynamoDB tables. It includes a CLI to test, validate and
 manage configuration data held in the DynamoDB tables.
 
-It uses Slack's [incoming webhook](https://api.slack.com/incoming-webhooks)
+Slacker uses Slack's [incoming webhooks custom
+integration](https://docs.slack.dev/legacy/legacy-custom-integrations/legacy-custom-integrations-incoming-webhooks)
 mechanism to send messages.
 
 !!! note
-    Slack webhooks are a legacy integration method but they work just fine.
+    Token based webhooks are a legacy integration method but they work just fine.
 
 The architecture is simple:
 
@@ -39,7 +40,7 @@ The sending process is:
 3.  Rules Processing
 
     Slacker processes the message against any rules specified in the
-    [webhooks table](#the-webhooks-table) table to decide if the message should
+    [webhooks table](#the-webhooks-table) to decide if the message should
     be discarded, diverted, or modified prior to sending.
 
 4.  Message Sending
@@ -80,11 +81,13 @@ The table contains the following fields.
         accidentally deployed into the wrong account.
 
     2.  One of `channel` (preferred) and `url` must be specified. 
-
+    
     3.  Slacker caches webhook entries for 5 minutes. Table updates can take this
         amount of time to become effective. The duration can be changed by setting
         the [`SLACKER_CACHE_TTL`](#slacker-lambda-environment-variables) environment
         variable.
+    
+    4.  `color` is accepted as an alternative to `colour`. Don't get me started.
 
 !!! tip
     A JSON schema definition is available for webhooks table entries. Some IDEs
@@ -93,15 +96,15 @@ The table contains the following fields.
 
 
     To use it, include the following element in entries:
-
+    
     === "YAML"
         ```yaml
-        $schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+        $schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml
         sourceID: ...
         ```
-
+    
         Replace `latest` with `vN` (e.g. `v2`) to get a versioned schema.
-
+    
     === "JSON"
         ```json
         {
@@ -109,9 +112,9 @@ The table contains the following fields.
             "sourceId": "..."
         }
         ```
-
+    
         Replace `latest` with `vN` (e.g. `v2`) to get a versioned schema.
-
+    
     Note that the slacker CLI will add the `$schema` entry when downloading from
     DynamoDB and strip it when deploying to DynamoDB.
 
@@ -147,15 +150,15 @@ The channels table contains the following fields.
     although the entries are so simple that it's hardly worth the bother.
 
     For what it's worth, to use it, include the following element in entries:
-
+    
     === "YAML"
         ```yaml
-        $schema: https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json
+        $schema: https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.yaml
         channel: ...
         ```
-
+    
         Replace `latest` with `vN` (e.g. `v2`) to get a versioned schema.
-
+    
     === "JSON"
         ```json
         {
@@ -163,7 +166,7 @@ The channels table contains the following fields.
             "channel": "..."
         }
         ```
-
+    
         Replace `latest` with `vN` (e.g. `v2`) to get a versioned schema.
 
 ## Message Sources
@@ -213,8 +216,9 @@ Messages sent to slacker from AWS related events are of two kinds.
 2.  **Text messages:** These are arbitrary text messages. Slacker can
     optionally apply a
     [Python regex](https://docs.python.org/3/library/re.html#regular-expression-syntax)
-    containing capture groups to these messages to extract named attributes for
-    use in Jinja rendered constructs for message filtering and reformatting.
+    containing capture groups to these messages to extract named or positional
+    attributes for use in Jinja rendered constructs for message filtering and
+    reformatting.
 
 Each rule is an object (dictionary) that may contain the following keys:
 
@@ -223,11 +227,11 @@ Each rule is an object (dictionary) that may contain the following keys:
 | #...|Any field with a name starting with `#` is treated as a comment and ignored by slacker.|
 | action | The action to take if the rule selects the message. Possible values are `drop` (discard the message) and `send`. The default is `send`.  |
 | channel | If the rule selects the message, override the [channel](#the-channels-table) to which the message is sent.|
-| colour | If the rule selects the message, override the default colour for the Slack sidebar.|
+| colour | If the rule selects the message, override the default colour for the Slack sidebar. `color` is also accepted.|
 | if | A Jinja template that is rendered using the attributes from an **object message** or the regex capture groups matched from a **text message** to produce a *truthy* value. If the *truthy* value is *true*, the rule applies to the message, otherwise the rule is skipped.|
-| match | A regex that will be applied to **text messages** using Python's [`re.search()`](https://docs.python.org/3/library/re.html#re.search). If the message is an **object message** or does not match the regex, the rule is skipped. The regex may contain named capture groups using the `(?P<name>...)` syntax in the regex. These are then made available as Jinja rendering variables for use in a `template` to produce a new message text. Slacker also populates the `msg` parameter with the full message text. |
+| match | A regex that will be applied to **text messages** using Python's [`re.search()`](https://docs.python.org/3/library/re.html#re.search). If the message is an **object message**, or does not match the regex, the rule is skipped. The results of the match are made available as Jinja rendering variables for use in `if` and `template` generation. See [Regular Expressions in Rules](#regular-expressions-in-rules). |
 | preamble | If the rule selects the message, override the default preamble for the Slack message.  |
-| template | A Jinja template used to generate the actual message to be sent to Slack. This is rendered with the attributes from an **object message** or the regex capture groups matched from a **text message**. If the rendering process fails for any reason (e.g. malformed Jinja), the rule is skipped.   |
+| template | A Jinja template used to generate the actual message to be sent to Slack. This is rendered with the attributes from an **object message** or the regex capture groups matched from a **text message**. If the rendering process fails for any reason (e.g. malformed Jinja), the rule is skipped. If not specified, the original incoming message text is used as the message content.|
 
 !!! tip
     Rules can be tested locally using the [slacker CLI](#the-slacker-cli).
@@ -250,15 +254,52 @@ Slacker makes the following rendering parameters available:
 |-|-|
 |aws|A dictionary of AWS related helper utilities as follows...|
 | &nbsp;&nbsp;&nbsp;&nbsp;aws.account\_id|The AWS account ID.|
+| &nbsp;&nbsp;&nbsp;&nbsp;aws.account\_name|The AWS account alias, if the account has one, otherwise the AWS account ID. This can be overridden by setting the `AWS_ACCOUNT_NAME` [environment variable](#slacker-lambda-environment-variables) on the slacker Lambda.|
 | &nbsp;&nbsp;&nbsp;&nbsp;aws.Arn|A class that takes an ARN and makes the individual components available as the following attributes: `partition`, `service`, `region`, `account`, `resource`. e.g. `{{ aws.Arn("arn:aws:sns:us-east-1:123456789012:xyzzy").region }}` is `us-east-1`. |
-|data|Dictionary containing attributes extracted from the source message by a `match` regex applied to a **text message** or the decoded content of an **object message**.|
+| &nbsp;&nbsp;&nbsp;&nbsp;aws.region|The AWS region name (e.g. `us-east-1`).|
+|data|Object containing attributes extracted from the source message by a `match` regex applied to a **text message** or the decoded content of an **object message**.|
 |datetime|The Python `datetime.datetime` module.|
 |date|The Python `datetime.date` module.|
-|msg|The original source message string.|
-|now|A function that takes an optional timezone name (default `UTC`) and returns a timezone aware Python datetime object. e.g. `now()` or `now('Australia/Melbourne')`.|
+|link()|A function that takes a URL and optional text argument and generates Slack compatible hyperlink syntax. e.g. `link('https://example.com')` or `link('https://example.com', 'Visit example.com')`|
+|msg|An object containing attributes associated with the incoming message as follows...|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.slacker_id|A unique identifier for the message that can be used to find the full original message contents. See [Logging](#message-logging).|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.source_id|The webhook sourceId.|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.source_name|The webhook source name. If set, this is generally a slightly more human friendly version of the sourceId.|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.subject|The message subject, if any.|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.text|The original message text.|
+| &nbsp;&nbsp;&nbsp;&nbsp;msg.timestamp|An epoch timestamp for the message.|
+|now()|A function that takes an optional timezone name (default `UTC`) and returns a timezone aware Python datetime object. e.g. `now()` or `now('Australia/Melbourne')`.|
 |re|The Python `re` (regex) module.|
-|time\_of\_day|A function that takes an optional timezone name (default `UTC`) and returns the current time as a string of the form `HH:MM:SS`. e.g. `current_time('UTC')` or `current_time('Australia/Melbourne')`.|
+|current\_time()|A function that takes an optional timezone name (default `UTC`) and returns the current time as a string of the form `HH:MM:SS`. e.g. `current_time('UTC')` or `current_time('Australia/Melbourne')`.|
 |tz|The python `ZoneInfo` module. e.g. `tz('Australia/Melbourne')`, `tz('UTC')`.|
+
+## Regular Expressions in Rules
+
+[Message rules](#message-rules) may contain a `match` key that specifies a [Python style regular expression](https://docs.python.org/3/library/re.html#regular-expression-syntax) (regex) that will be applied to **text messages**. If the regex matches, the rule is selected (subject to any `if` condition).
+
+!!! info
+    Python's [`re.search()`](https://docs.python.org/3/library/re.html#re.search)
+    is used. i.e. Matches are not anchored to the beginning of the string by
+    default.
+
+Regexes are not applied to **object messages**.
+
+The regex may contain either named, or unnamed capture groups, but not both.
+Named groups are much safer for anything other than the simplest of patterns.
+
+The results of the match are made available to the [Jinja rendering
+process](#jinja-rendering) as the `data` object.
+
+If the regex contains named groups using the `(?P<name>...)` syntax, the `data`
+object passed to the [Jinja rendering process](#jinja-rendering) is a dictionary
+containing all the *named* subgroups of the match, keyed by the subgroup name.
+
+If the regex contains only unnamed groups, the `data` object passed to the
+[Jinja rendering process](#jinja-rendering) is a tuple containing all the
+subgroups of the match.
+
+If the regex does not contain any groups, the `data` object passed to the [Jinja
+rendering process](#jinja-rendering) is a string containing the matched string.
 
 ## The Wildcard Webhook
 
@@ -290,3 +331,94 @@ It has two roles:
 !!! tip
     A sample set of rules for the wildcard webhook is provided in the
     [rule library](#general-purpose-rules).
+
+## Message Logging
+
+If slacker is [configured to log messages](#slacker-lambda-environment-variables)
+in CloudWatch, entries like this are written to log group `/aws/lambda/slacker`:
+
+```json
+{
+  "message": "...",
+  "slackerId": "AAECPR9qbwTqaD3o",
+  "sourceId": "arn:aws:sns:us-east-1:...",
+  "sourceName": "SNS:...",
+  "subject": "Whatever",
+  "timestamp": 1749106337.055,
+  "type": "incoming"
+}
+```
+
+On rare occasions, it is helpful to be able to see the original message detail.
+This is easy to do using the details from the message footer in Slack, as shown
+below.
+
+![](img/samples/footer-example.png)
+
+The footer contains:
+
+*   AWS account name / alias (`slacker-demo` in this example)
+*   AWS region (`ap-southeast-2`)
+*   `slackerId`, (`AAECPR9qbwTqaD3o`) a key into the CloudWatch log group
+    `/aws/lambda/slacker` for the message.
+
+The first two indicate where to find the `/aws/lambda/slacker` log group. The
+`slackerId` will locate the original message within that log group using the
+following search syntax in the CloudWatch logs console:
+
+```
+{ $.slackerId="AAECPR9qbwTqaD3o" }
+```
+
+Alternatively, the following CloudWatch Logs Insights query can be used:
+
+```
+fields @timestamp, @message
+| filter slackerId="AAECPR9qbwTqaD3o"
+```
+
+## Time Based Rules
+
+Slacker can effectively enable or disable message rules at specific times of
+day, or days of the week, by combining the `if` attribute of a [message
+rule](#message-rules) with the various date / time functions provided as part of
+the [Jinja rendering](#jinja-rendering) process.
+
+Time based rules can also be used to alter the way in which messages are handled
+at different times. For example, messages can be diverted to a different Slack
+channel it different times of day by adding a time based condition and an
+override `channel` to specific rules.
+
+For example, the following rules would cause messages to be dropped outside of
+business hours in Sydney.
+
+```yaml+jinja
+rules:
+  - '#': Drop all object messages outside business hours
+    if: >-
+      {{
+        now("Australia/Sydney").weekday() > 4 
+        or
+        not "08:00:00" <= current_time("Australia/Sydney") <= "18:00:00"
+      }}
+    action: drop
+  - '#': Drop all text messages outside business hours
+    match: '.'
+    if: >-
+      {{
+        now("Australia/Sydney").weekday() > 4 
+        or
+        not "08:00:00" <= current_time("Australia/Sydney") <= "18:00:00"
+      }}
+    action: drop
+```
+
+Note that the `if` element is only evaluated for **object messages**. The first
+of the rules above handles messages that arrive at slacker as JSON blobs. These
+are automatically converted to **object messages** by slacker.
+
+For **text messages**, we must force slacker to convert these to an **object
+message** by specifying a `match` element. The second rule contains a trivial
+regex that will match all text messages. See [Regular Expressions in
+Rules](#regular-expressions-in-rules) for more information.
+

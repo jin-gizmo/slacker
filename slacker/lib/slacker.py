@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import time
+from collections.abc import Iterable
 from contextlib import suppress
 from dataclasses import dataclass, field
 from logging import getLogger
@@ -22,8 +23,9 @@ from config import (
     MAX_MESSAGE_LEN,
     SLACK_API_TIMEOUT,
 )
-from lib.jinja import get_jenv
-from lib.utils import str2bool
+from .aws import account_name, region_name
+from .jinja import get_jenv
+from .utils import short_oid, str2bool
 
 log = getLogger(LOGNAME)
 webhook_cache = TTLCache(maxsize=200, ttl=CACHE_TTL) if CACHE_TTL > 0 else None
@@ -38,41 +40,49 @@ class SlackerError(Exception):
 
 
 # ------------------------------------------------------------------------------
-@dataclass
-class SlackMsg:
+@dataclass(kw_only=True)
+class SlackerMsg:
     """Canonical content for a message to be sent to Slack."""
 
     source_id: str
     source_name: str
     subject: str | None
-    message: str | None
+    text: str | None
     timestamp: float = None
     colour: str = None
     preamble: str = None
     channel: str = None
-    _msg_object: Any = field(default=None, repr=False, compare=False)
+    slacker_id: str = field(default_factory=short_oid, init=False)
+    _data: Any = field(default=None, repr=False, compare=False)
 
     @classmethod
-    def from_object(cls, obj: dict[str, Any], **kwargs) -> SlackMsg:
+    def from_object(cls, obj: dict[str, Any], **kwargs) -> SlackerMsg:
         """Create a SlackMsg from an already-decoded object."""
-        return cls(message=json.dumps(obj, indent=4), _msg_object=obj, **kwargs)
+        return cls(text=json.dumps(obj, indent=4), _data=obj, **kwargs)
 
     @property
-    def msg_object(self) -> Any | None:
+    def data(self) -> Any | None:
         """Try to decode the message as an object."""
         # If we have a pre-decoded object, use it
-        if self._msg_object is not None:
-            return self._msg_object
+        if self._data is not None:
+            return self._data
 
         # Otherwise try to decode from message string
         with suppress(Exception):
-            return json.loads(self.message)
+            return json.loads(self.text)
         return None
 
+    def __str__(self) -> str:
+        """Get the string representation of the SlackMsg object."""
+        return self.text
+
     # ------------------------------------------------------------------------------
-    def send(self, webhook_info: dict[str, Any]):
+    def send(self, webhook_info: dict[str, Any], include_slacker_id: bool = True) -> None:
         """
         Send a message to slack.
+
+        :param webhook_info:    Destination webhook info.
+        :param include_slacker_id: If True, include the slackerId in the message.
 
         At this point, any channel->url mapping (for the slacker webhook) must be
         fully resolved.
@@ -83,15 +93,21 @@ class SlackMsg:
         except KeyError:
             raise SlackerError(f'Cannot determine URL for webhook {webhook_info.get("sourceId")}')
 
+        footer = [account_name(), region_name()]
+        if include_slacker_id:
+            footer.append(self.slacker_id)
+
         slack_msg = {
             'attachments': [
                 {
-                    'fallback': self.message[:MAX_MESSAGE_LEN],
+                    'fallback': self.text[:MAX_MESSAGE_LEN],
                     'author_name': self.source_name,
-                    'color': self.colour or webhook_info.get('colour', DEFAULT_COLOUR),
+                    'color': self.colour
+                    or webhook_info.get('colour')
+                    or webhook_info.get('color', DEFAULT_COLOUR),
                     'title': self.subject,
-                    'text': self.message[:MAX_MESSAGE_LEN],
-                    'footer': 'Event time',
+                    'text': self.text[:MAX_MESSAGE_LEN],
+                    'footer': ' | '.join(footer),
                     'ts': self.timestamp or int(time.time()),
                 }
             ]
@@ -160,7 +176,7 @@ def get_channel(channel: str, channels_table) -> dict[str, Any] | None:
 
 
 # ------------------------------------------------------------------------------
-def process_msg_rules(msg: SlackMsg, rules: list[dict[str, Any]]) -> None:
+def process_msg_rules(msg: SlackerMsg, rules: Iterable[dict[str, Any]]) -> None:
     """
     Process the message transformation rules against a Slack message.
 
@@ -170,21 +186,22 @@ def process_msg_rules(msg: SlackMsg, rules: list[dict[str, Any]]) -> None:
     :param rules:   The transformation / filtering rules from the webhooks table.
     """
 
-    message = msg.message
     jenv = get_jenv()
 
     for rule_no, rule in enumerate(rules, 1):
-        msg_object = msg.msg_object
+        data = msg.data
 
         if 'match' in rule:
-            if msg_object:
+            if data:
                 log.debug(
                     '"match" in rule %d does not apply to object messages - skipping', rule_no
                 )
                 continue
             # For plain text messages we allow a regex to extract an object via capture groups
-            if m := re.search(rule['match'], message):
-                msg_object = m.groupdict()
+            if m := re.search(rule['match'], msg.text):
+                # Capture groups take priority but if there are none we supply a tuple of matched
+                # components.
+                data = m.groupdict() or m.groups() or m.group(0)
             else:
                 log.debug('Match failed in rule %d - skipping', rule_no)
                 continue
@@ -193,14 +210,12 @@ def process_msg_rules(msg: SlackMsg, rules: list[dict[str, Any]]) -> None:
         # object, either by decoding JSON or via regex capture groups.
 
         if 'if' in rule:
-            if not msg_object:
+            if not data:
                 log.debug('"if" in rule %d only applies to object messages - skipping', rule_no)
                 continue
 
             try:
-                condition = str2bool(
-                    jenv.from_string(rule['if']).render(data=msg_object, msg=message)
-                )
+                condition = str2bool(jenv.from_string(rule['if']).render(data=data, msg=msg))
             except Exception as e:
                 log.warning('Error evaluating if condition for rule %d: %s', rule_no, e)
                 condition = False
@@ -210,32 +225,32 @@ def process_msg_rules(msg: SlackMsg, rules: list[dict[str, Any]]) -> None:
 
         match rule.get('action', DEFAULT_ACTION):
             case 'drop':
-                log.info('Dropping message due to rule %d: %s', rule_no, message)
-                msg.message = None
+                log.info('Dropping message due to rule %d: %s', rule_no, msg.text)
+                msg.text = None
                 return
             case 'send':
-                log.debug('Proceeding to prepare phase for rule %d: %s', rule_no, message)
+                log.debug('Proceeding to prepare phase for rule %d: %s', rule_no, msg.text)
             case _:
                 raise SlackerError(f'Unknown action in rule {rule_no}: {rule["action"]}')
 
         if 'template' not in rule:
             # Send message unchanged
-            msg.colour = rule.get('colour', rule.get('color'))
+            msg.colour = rule.get('colour') or rule.get('color')
             msg.preamble = rule.get('preamble')
             msg.channel = rule.get('channel')
             return
 
-        # Prepare the transformed message content
-        if not msg_object:
+        if not data:
             # Templates only apply to messages from which an object has been extracted.
-            log.debug('Cannot transform plain text msg - skipping rule: %s', message)
+            log.debug('Cannot transform plain text msg - skipping rule: %s', msg.text)
             continue
 
+        # Prepare the transformed message content
         try:
             msg.colour = rule.get('colour', rule.get('color'))
             msg.preamble = rule.get('preamble')
             msg.channel = rule.get('channel')
-            msg.message = jenv.from_string(rule['template']).render(data=msg_object, msg=message)
+            msg.text = jenv.from_string(rule['template']).render(data=data, msg=msg)
             return
         except Exception as e:
             log.warning('Error evaluating template for rule %d: %s', rule_no, e)

@@ -1,0 +1,74 @@
+$schema: https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+sourceId: '*'
+channel: test
+
+# This is illegal
+bad: field
+
+rules:
+  - '#': AWS Health Event
+    if: "{{ data['detail-type'] == 'AWS Health Event' }}"
+    template: >-
+      {% set icons = {
+         'scheduledChange': ':calendar:',
+         'issue': ':zap:',
+         'accountNotification': ':information_source:',
+         'investigation': ':magnifying_glass_right:',
+       } %}
+      {%- set sep=':black_small_square:' -%}
+      {{ icons.get(data.detail.eventTypeCategory, ':large_purple_circle:') }}
+      *{{ data.detail.eventTypeCode }}*
+      {{ sep }}
+      {{ data.detail.eventTypeCategory }}
+
+      *{{ data.detail.startTime }} ... {{ data.detail.endTime }}*
+
+      {% if data.resources -%}
+      ```
+
+      {% for resource in data.resources %}
+      * {{ resource }}
+
+      {% endfor -%}
+      ```
+      {% endif %}
+
+      {{ (data.detail.eventDescription | first).latestDescription | replace('\\n', '\n')  }}
+
+  - '#': CloudWatch Alarm ON
+    if: "{{ data.NewStateValue == 'ALARM' }}"
+    colour: '#ff0000'
+    preamble: <!channel>
+    template: >
+      {%- set sep=':black_small_square:' -%}
+      {%- set desc=(data.AlarmDescription or data.AlarmName or '?').splitlines() -%}
+
+      :red_circle:
+      *{{ desc[0].strip() }}*
+      {{ sep }}
+      {{ data.StateChangeTime.split('.')[0] }}Z
+      {%- if desc | length > 1 %}
+
+
+      {{ data.AlarmDescription }}{%endif %}
+
+
+      _{{ data.NewStateReason }}_
+
+  - '#': CloudWatch Alarm OFF
+    if: "{{ data.NewStateValue == 'OK' }}"
+    colour: '#00ff00'
+    template: >
+      {%- set sep=':black_small_square:' -%}
+      {%- set desc=(data.AlarmDescription or data.AlarmName or '?').splitlines() -%}
+
+      :white_check_mark:
+      *{{ desc[0].strip() }}*
+      {{ sep }}
+      {{ data.StateChangeTime.split('.')[0] }}Z
+
+  - '#': Pretty print messages consisting of JSON
+    template: |
+      ```
+      {{ data | tojson(4) }}
+      ```

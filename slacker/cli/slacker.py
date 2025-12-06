@@ -11,10 +11,10 @@ import re
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser, Namespace
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from contextlib import suppress
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime
 from functools import cache, partial
 from getpass import getuser
 from importlib import resources
@@ -33,21 +33,21 @@ from pygments.lexers import JsonLexer, YamlLexer
 
 import slacker.schemas
 import slacker.version
-from slacker.config import SCHEMA_BASE_URL, SLACKER_DOC_URL
+from slacker.config import SCHEMA_BASE_URL, SLACKER_DOC_URL, WILDCARD_SOURCE_ID
 
 # This is a bit of a hack to allow the same package structure to be used for the
 # lambda bundle as for the pip-installable bundle. Yes, I should work it out properly.
 sys.path.insert(0, str(Path(slacker.version.__file__).parent))
 
-from lib.aws import Arn, account_id, dynamo_scan_table  # noqa E402
+from lib.aws import Arn, account_id, dynamo_scan_table, lambda_restart, region_name  # noqa E402
 from lib.slacker import (  # noqa E402
-    SlackMsg,
+    SlackerMsg,
     SlackerError,
     get_channel,
     get_webhook,
     process_msg_rules,
 )
-from lib.utils import YamlIndentDumper, setup_logging  # noqa E402
+from lib.utils import YamlIndentDumper, setup_logging, json_default  # noqa E402
 
 PROG = Path(sys.argv[0]).stem
 
@@ -73,6 +73,7 @@ def _cprint(colour, *args, **kwargs):
 info = partial(_cprint, Fore.GREEN)
 warning = partial(_cprint, Fore.YELLOW)
 error = partial(_cprint, Fore.RED)
+heading = partial(_cprint, Fore.BLUE)
 
 
 # ------------------------------------------------------------------------------
@@ -100,11 +101,22 @@ def validate_webhook_schema(webhook: dict[str, Any]) -> None:
 
 # ------------------------------------------------------------------------------
 @cache
-def extra_webhook_fields() -> dict[str, Any]:
-    """Generate extra webhook fields to add when downloading."""
+def extra_webhook_fields(fmt: str) -> dict[str, Any]:
+    """
+    Generate extra webhook fields to add when downloading.
+
+    :param fmt: The intended output format. This influences which version of the
+                JSON schema is used. Must be one of: json or yaml.
+
+    :return: A dict with extra webhook fields.
+    """
+
+    if fmt.lower() not in ('json', 'yaml'):
+        raise ValueError(f'Bad format: {fmt}')
+
     return {
         'account': account_id(),
-        '$schema': f'{SCHEMA_BASE_URL}/webhook.schema.json',
+        '$schema': f'{SCHEMA_BASE_URL}/webhook.schema.{fmt.lower()}',
     }
 
 
@@ -131,7 +143,7 @@ def sns_topic_has_slacker_subscription(topic_arn: str, sns_client) -> bool:
         for result in paginator.paginate(TopicArn=topic_arn):
             for subscription in result.get('Subscriptions', []):
                 if subscription['Protocol'] == 'lambda' and subscription['Endpoint'].endswith(
-                    ':function:slacker'
+                    f':function:{SLACKER_APP_NAME}'
                 ):
                     return True
     return False
@@ -148,7 +160,10 @@ def log_group_has_slacker_subscription(log_group_name: str, logs_client) -> bool
         for result in paginator.paginate(logGroupName=log_group_name):
             for sf in result.get('subscriptionFilters', []):
                 dest_arn = Arn(sf['destinationArn'])
-                if dest_arn.service == 'lambda' and dest_arn.resource == 'function:slacker':
+                if (
+                    dest_arn.service == 'lambda'
+                    and dest_arn.resource == f'function:{SLACKER_APP_NAME}'
+                ):
                     return True
 
     return False
@@ -345,7 +360,7 @@ class CmdDump(CliCommand):
         aws_session = boto3.Session()
 
         if args.json:
-            dumper = partial(json.dumps, indent=4, sort_keys=True)
+            dumper = partial(json.dumps, indent=4, sort_keys=True, default=json_default)
             suffix = '.json'
         else:
             # Can't use safe_dump here because we want to override the dumper.
@@ -368,7 +383,10 @@ class CmdDump(CliCommand):
                 filenames.add(name)
 
                 try:
-                    zf.writestr(f'{name}{suffix}', dumper(item | extra_webhook_fields()))
+                    zf.writestr(
+                        f'{name}{suffix}',
+                        dumper(item | extra_webhook_fields('json' if args.json else 'yaml')),
+                    )
                 except Exception as e:
                     raise SlackerError(f'SourceId: {item["sourceId"]}: {e}') from e
 
@@ -401,7 +419,7 @@ class CmdGet(CliCommand):
         webhooks_table = aws_session.resource('dynamodb').Table(WEBHOOKS_TABLE)
         response = webhooks_table.get_item(Key={'sourceId': args.source_id})
         if args.json:
-            dumper = partial(json.dumps, indent=4, sort_keys=True)
+            dumper = partial(json.dumps, indent=4, sort_keys=True, default=json_default)
             lexer = JsonLexer()
         else:
             # We deliberately don't use yaml.safe_dump here because we want to
@@ -410,7 +428,9 @@ class CmdGet(CliCommand):
             lexer = YamlLexer()
 
         try:
-            whook_str = dumper(response['Item'] | extra_webhook_fields()).rstrip('\n')
+            whook_str = dumper(
+                response['Item'] | extra_webhook_fields('json' if args.json else 'yaml')
+            ).rstrip('\n')
         except KeyError:
             raise KeyError(f'{args.source_id}: No such item')
 
@@ -447,6 +467,20 @@ class CmdPut(CliCommand):
                 'Force a deployment even if the webhook item has errors. This is '
                 ' not a good idea. AWS account number mismatches cannot be forced.'
                 ' Thank me later.'
+            ),
+        )
+
+        self.argp.add_argument(
+            '-R',
+            '--no-restart',
+            dest='restart',
+            action='store_false',
+            help=(
+                'Don\'t restart the slacker Lambda to clear the internal webhook'
+                ' cache. By default a restart is done after a successful webhook'
+                ' upload. Using this option will result in webhook changes taking'
+                ' some minutes to propagate. Use this option when deploying multiple'
+                ' webhooks, followed by a final "restart" command.'
             ),
         )
 
@@ -506,13 +540,17 @@ class CmdPut(CliCommand):
         print(f'{item["sourceId"]}: Item {action}')
         if args.backup and action == 'updated':
             dumper = (
-                partial(json.dump, indent=4, sort_keys=True)
+                partial(json.dump, indent=4, sort_keys=True, default=json_default)
                 if args.backup.endswith('.json')
                 else partial(yaml.dump, default_flow_style=False, Dumper=YamlIndentDumper)
             )
             with open(args.backup, 'w') as fp:
                 dumper(response['Attributes'], fp)
             print(f'{response["Attributes"]["sourceId"]}: Previous data stored in {args.backup}')
+
+            if args.restart:
+                lambda_restart(SLACKER_APP_NAME)
+                print(f'{SLACKER_APP_NAME} restarted')
 
     # --------------------------------------------------------------------------
     def execute(self, args: Namespace) -> None:
@@ -553,12 +591,12 @@ class CmdTest(CliCommand):
             raise SlackerError('Errors in webhooks entry')
 
         msg_text = sys.stdin.read()
-        msg = SlackMsg(
-            source_id=item['sourceId'], source_name='...', subject='Test', message=msg_text
+        msg = SlackerMsg(
+            source_id=item['sourceId'], source_name='...', subject='Test', text=msg_text
         )
         process_msg_rules(msg, item.get('rules', []))
-        if msg.message:
-            print(msg.message)
+        if msg.text:
+            print(msg.text)
 
     def execute(self, args: Namespace) -> None:
         """Test a message for processing against a webhooks entry."""
@@ -587,15 +625,23 @@ class CmdCheck(CliCommand):
         super().__init__(*args, **kwargs)
         self.aws_session = None
         self.webhooks_table = None
+        self.ebridge = None
+        self.slacker_arn = None
 
     def execute(self, args: Namespace) -> None:
         """Check slacker configuration."""
 
         self.aws_session = boto3.Session()
         dynamodb = self.aws_session.resource('dynamodb')
+        self.ebridge = self.aws_session.client('events')
+        self.slacker_arn = (
+            f'arn:aws:lambda:{region_name()}:{account_id()}:function:{SLACKER_APP_NAME}'
+        )
         self.webhooks_table = dynamodb.Table(WEBHOOKS_TABLE)
+
         self.check_webhooks()
         self.check_sns_subscriptions()
+        self.check_event_rules()
 
     def check_sns_subscriptions(self) -> None:
         """
@@ -605,7 +651,7 @@ class CmdCheck(CliCommand):
         corresponding webhook, subscriptions for which the topic is missing etc.
         """
 
-        info('Checking SNS subscriptions...')
+        heading('Checking SNS subscriptions...')
         sns = self.aws_session.client('sns')
         paginator = sns.get_paginator('list_subscriptions')
         for response in paginator.paginate():
@@ -615,7 +661,7 @@ class CmdCheck(CliCommand):
                 topic_arn = subscription['TopicArn']
                 if (
                     subscription['Protocol'] != 'lambda'
-                    or not subscription['Endpoint'].endswith(':function:slacker')
+                    or not subscription['Endpoint'].endswith(f':function:{SLACKER_APP_NAME}')
                     or not subscription['SubscriptionArn'].startswith('arn:')
                 ):
                     continue
@@ -632,7 +678,12 @@ class CmdCheck(CliCommand):
                     case (False, True):
                         warning(f'{topic_arn}: Orphan SNS subscription and enabled webhooks entry')
                     case (True, False):
-                        error(f'{topic_arn}: Webhooks entry is missing or disabled')
+                        # No webhook for this source. Maybe there is a wildcard
+                        wildcard_webhook = get_webhook(WILDCARD_SOURCE_ID, self.webhooks_table)
+                        if wildcard_webhook:
+                            info(f'{topic_arn}: Relying on wildcard webhook')
+                        else:
+                            error(f'{topic_arn}: Webhooks entry is missing or disabled')
                     case (False, False):
                         warning(f'{topic_arn}: Orphan SNS subscription')
         print()
@@ -640,7 +691,7 @@ class CmdCheck(CliCommand):
     def check_webhooks(self):
         """Check basic hygiene on webhooks."""
 
-        info('Checking webhooks...')
+        heading('Checking webhooks...')
         for item in self.webhooks_table.scan(Select='ALL_ATTRIBUTES').get('Items', []):
             # Check some basic hygiene
             source_id = item['sourceId']
@@ -652,6 +703,67 @@ class CmdCheck(CliCommand):
             for msg in results.errors:
                 error(f'{source_id}: {msg}')
         print()
+
+    def check_event_rules(self):
+        """Check EventBridge rules."""
+
+        paginator = self.ebridge.get_paginator('list_rule_names_by_target')
+        heading('Checking EventBridge rules...')
+        for response in paginator.paginate(TargetArn=self.slacker_arn):
+            for rule_name in response.get('RuleNames', []):
+                # Check SlackerSourceId / SlackerSourceName present in input templates
+                rule_ok = True
+                for (
+                    target_id,
+                    source_id,
+                    source_name,
+                ) in self.get_source_info_from_event_bridge_rule(rule_name):
+                    if not source_id:
+                        rule_ok = False
+                        error(f'Rule {rule_name}: Target {target_id}: SlackerSourceId missing')
+                    if not source_name:
+                        rule_ok = False
+                        warning(f'Rule {rule_name}: Target {target_id}: SlackerSourceName missing')
+                if rule_ok:
+                    info(f'Rule {rule_name}: OK')
+
+    def get_source_info_from_event_bridge_rule(
+        self, rule_name: str
+    ) -> Iterator[tuple[str, str, str]]:
+        """
+        Get the source id / name slacker will see for a given EventBridge rule.
+
+        This can only handle objects with an input transformer and we are
+        looking for the `SlackerSourceId` and `SlackerSourceName` fields in the
+        input template. We can't know their values until runtime but we can see
+        if they are present.
+
+        There is a bit of a heuristic here in that we cannot full determine this
+        until runtime but this will be pretty close except for some very rare
+        edge cases.
+
+        :return:    A tuple (target ID, SlackerSourceId, SlackerSourceName) for
+                    each target pointed at slacker.
+        """
+
+        paginator = self.ebridge.get_paginator('list_targets_by_rule')
+        for response in paginator.paginate(Rule=rule_name):
+            for target in response.get('Targets', []):
+                if target.get('Arn') != self.slacker_arn:
+                    continue
+
+                template_s = target.get('InputTransformer', {}).get('InputTemplate')
+                if not template_s:
+                    continue
+
+                try:
+                    template = json.loads(template_s)
+                except json.JSONDecodeError:
+                    error(f'{rule_name}: Target {target["Id"]}: Invalid JSON template')
+                    continue
+                yield target['Id'], template.get('SlackerSourceId'), template.get(
+                    'SlackerSourceName'
+                )
 
 
 # ------------------------------------------------------------------------------
@@ -667,18 +779,7 @@ class CmdRestart(CliCommand):
     def execute(self, args: Namespace) -> None:
         """Restart the Lambda."""
 
-        lambda_client = boto3.Session().client('lambda')
-        lambda_client.update_function_configuration(
-            FunctionName=SLACKER_APP_NAME,
-            Environment={
-                'Variables': {
-                    'RESTART': (
-                        f'At {datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")}'
-                        f' by {getuser()}@{gethostname()}'
-                    ),
-                }
-            },
-        )
+        lambda_restart(SLACKER_APP_NAME)
 
 
 # ..............................................................................

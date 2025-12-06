@@ -12,6 +12,14 @@
     Kudos to Origin for fostering a culture that empowers its people
     to build complex technology solutions in-house.
 
+<div style="text-align: center;">
+  <img src="img/slacker-icon.png" alt="Slacker Logo" 
+       alt="Slacker Logo" 
+       width="120px" 
+       height="auto"
+       class="slacker-logo">
+</div>
+
 **Slacker** (aka *JinSlacker*) sends messages from AWS services to Slack
 channels.
 
@@ -22,7 +30,7 @@ with limited control of where messages can come from or go to, as well as having
 your Slack channels filling up with the incomprehensible gibberish produced in a
 typical AWS environment.
 
-**Slacker** supports a number of capabilities to address these challenges:
+Features:
 
 *   Message content analysis using regular expressions and JSON parsing
 *   Message routing and filtering based on message source, content, and time of day

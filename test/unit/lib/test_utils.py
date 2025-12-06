@@ -6,7 +6,7 @@ import pytest
 import yaml
 from jinja2 import Environment
 
-from lib.utils import *
+from slacker.lib.utils import *
 
 
 # ------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 47 
+personal_ws-1.1 en 49 
 ARN
 Arn
 CLI
@@ -16,6 +16,7 @@ Jinja
 LOGLEVEL
 PyCharm
 PyPI
+Regexes
 SNS
 SlackerSourceId
 SlackerSourceName
@@ -26,6 +27,7 @@ Webhook
 YAML
 ZoneInfo
 aws
+color
 datetime
 defaultSideBarColour
 dynamoDbReadCapacity

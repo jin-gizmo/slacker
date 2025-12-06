@@ -49,7 +49,7 @@ $(dist)/doc/$(USER_GUIDE).md: $(MARKDOWN_SRC) $(IMAGES)
 		cp -R $(SCHEMA_DIR) "$@/docs/schemas" ; \
 		find "$@/docs/schemas" -name '*.yaml' | while read -r f ; \
 		do \
-			../etc/yaml2json < "$$f" > "$${f%.yaml}.json" ; \
+			../etc/schema2json < "$$f" > "$${f%.yaml}.json" ; \
 		done ; \
 		find "$@" -name __pycache__ | xargs $(RM) -r ; \
 		$(RM) "$@/docs/schemas/__init__.py" ; \

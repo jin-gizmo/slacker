@@ -1,0 +1,13 @@
+# Test use of unnamed regex capture groups
+
+input: Hello world
+
+rules:
+  - match: "(\\w+)\\s+(\\w+)"
+    if: '{{ data[1] == "world" }}'
+    template: "{{ data[0] }} there"
+    action: send
+
+  - action: drop
+
+output: "Hello there"
