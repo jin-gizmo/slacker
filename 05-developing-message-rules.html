@@ -670,19 +670,24 @@ webhooks.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Latest</label><label for="__tabbed_1_2">Versioned</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1">https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json
-</span><span id="__span-0-2">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1">https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.yaml
+</span><span id="__span-0-2">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1">https://jin-gizmo.github.io/slacker/schemas/v2/channel.schema.json
-</span><span id="__span-1-2">https://jin-gizmo.github.io/slacker/schemas/v2/webhook.schema.json
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1">https://jin-gizmo.github.io/slacker/schemas/v2/channel.schema.yaml
+</span><span id="__span-1-2">https://jin-gizmo.github.io/slacker/schemas/v2/webhook.schema.yaml
 </span></code></pre></div>
 </div>
 </div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>JSON formatted versions of the schemas are also available. Just replace
+<code>.yaml</code> with <code>.json</code>.</p>
+</div>
 <p>These schemas are referenced in the entries like so:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -698,9 +703,16 @@ will be treated. Usage is:</p>
 </span><span id="__span-3-2"><span class="c1"># ... or ...</span>
 </span><span id="__span-3-3">slacker<span class="w"> </span><span class="nb">test</span><span class="w"> </span>webhook-entry.yaml<span class="w"> </span>&lt;<span class="w"> </span>message.json
 </span></code></pre></div>
-<p>This will apply exactly the same processing to the test message as the slacker
-Lambda will, showing the resulting message that will be sent, if any.
+<p>This will apply <em>almost</em> exactly the same processing to the test message as the
+slacker Lambda will, showing the resulting message that will be sent, if any.
 Additionally, full schema validation of the webhook entry will be performed.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <code>slacker test</code> command does not automatically apply the
+<a href="02-how-it-works.html#the-wildcard-webhook">wildcard webhook</a> when testing rules. It applies
+only the webhook contents specified in the file argument. Test separately
+against the <a href="02-how-it-works.html#the-wildcard-webhook">wildcard webhook</a> as required.</p>
+</div>
 <p>The message file will contain <em>the actual message text that is sent</em> (which
 slacker will decode as JSON if it can).</p>
 <p>For messages arriving via SNS, this does not include all of the delivery
@@ -725,11 +737,11 @@ checks are made prior to upload:</p>
 <div class="admonition note">
 <p class="admonition-title">Notes</p>
 <ol>
-<li>Slacker caches webhook entries for 5 minutes. Table updates can take
-    this amount of time to become effective. The duration can be changed by
-    setting the <a href="04-installation-and-usage.html#slacker-lambda-environment-variables"><code>SLACKER_CACHE_TTL</code></a>
-    environment variable. The <code>slacker restart</code> command can be used to
-    flush the caches.</li>
+<li>The slacker Lambda caches webhook entries for 5 minutes. By default,
+    <code>slacker put</code> will restart the slacker Lambda to flush the webhook
+    cache. If multiple webhooks are being deployed, use <code>slacker put
+    --no-restart</code>, followed by a <code>slacker restart</code> once deployments are
+    done.</li>
 <li>The DynamoDB tables have point-in-time recovery enabled, just in case.</li>
 </ol>
 </div>
@@ -784,7 +796,7 @@ configuration hygiene checks, looking for problems such as:</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.6.0
+            v2.7.0
           </div>
         </div>
       </div>

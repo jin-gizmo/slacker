@@ -429,10 +429,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#regular-expressions-in-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Expressions in Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-wildcard-webhook" class="md-nav__link">
     <span class="md-ellipsis">
       
         The Wildcard Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-based-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Based Rules
       
     </span>
   </a>
@@ -675,10 +708,43 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#regular-expressions-in-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Expressions in Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-wildcard-webhook" class="md-nav__link">
     <span class="md-ellipsis">
       
         The Wildcard Webhook
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message Logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#time-based-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Time Based Rules
       
     </span>
   </a>
@@ -709,11 +775,12 @@
 <p>Slacker has a minimal AWS footprint, consisting of a Python-based AWS Lambda
 function and two small DynamoDB tables. It includes a CLI to test, validate and
 manage configuration data held in the DynamoDB tables.</p>
-<p>It uses Slack's <a href="https://api.slack.com/incoming-webhooks">incoming webhook</a>
+<p>Slacker uses Slack's <a href="https://docs.slack.dev/legacy/legacy-custom-integrations/legacy-custom-integrations-incoming-webhooks">incoming webhooks custom
+integration</a>
 mechanism to send messages.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Slack webhooks are a legacy integration method but they work just fine.</p>
+<p>Token based webhooks are a legacy integration method but they work just fine.</p>
 </div>
 <p>The architecture is simple:</p>
 <p><img alt="Slacker architecture" src="img/slacker-architecture.drawio.svg" /></p>
@@ -743,7 +810,7 @@ ID is not found in the <a href="#the-webhooks-table">webhooks table</a>, the
 <li>
 <p>Rules Processing</p>
 <p>Slacker processes the message against any rules specified in the
-<a href="#the-webhooks-table">webhooks table</a> table to decide if the message should
+<a href="#the-webhooks-table">webhooks table</a> to decide if the message should
 be discarded, diverted, or modified prior to sending.</p>
 </li>
 <li>
@@ -852,6 +919,9 @@ table is created as part of a standard <a href="04-installation-and-usage.html#i
     the <a href="04-installation-and-usage.html#slacker-lambda-environment-variables"><code>SLACKER_CACHE_TTL</code></a> environment
     variable.</p>
 </li>
+<li>
+<p><code>color</code> is accepted as an alternative to <code>colour</code>. Don't get me started.</p>
+</li>
 </ol>
 </div>
 <div class="admonition tip">
@@ -863,7 +933,7 @@ auto-completion, dynamic validation etc. </p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">YAML</label><label for="__tabbed_1_2">JSON</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.json</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/webhook.schema.yaml</span>
 </span><span id="__span-0-2"><span class="nt">sourceID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </span></code></pre></div>
 <p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
@@ -942,7 +1012,7 @@ although the entries are so simple that it's hardly worth the bother.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">YAML</label><label for="__tabbed_2_2">JSON</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.json</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jin-gizmo.github.io/slacker/schemas/latest/channel.schema.yaml</span>
 </span><span id="__span-2-2"><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </span></code></pre></div>
 <p>Replace <code>latest</code> with <code>vN</code> (e.g. <code>v2</code>) to get a versioned schema.</p>
@@ -1023,8 +1093,9 @@ out simple (or empty!) and be augmented over time.</p>
 <li><strong>Text messages:</strong> These are arbitrary text messages. Slacker can
     optionally apply a
     <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax">Python regex</a>
-    containing capture groups to these messages to extract named attributes for
-    use in Jinja rendered constructs for message filtering and reformatting.</li>
+    containing capture groups to these messages to extract named or positional
+    attributes for use in Jinja rendered constructs for message filtering and
+    reformatting.</li>
 </ol>
 <p>Each rule is an object (dictionary) that may contain the following keys:</p>
 <table>
@@ -1049,7 +1120,7 @@ out simple (or empty!) and be augmented over time.</p>
 </tr>
 <tr>
 <td>colour</td>
-<td>If the rule selects the message, override the default colour for the Slack sidebar.</td>
+<td>If the rule selects the message, override the default colour for the Slack sidebar. <code>color</code> is also accepted.</td>
 </tr>
 <tr>
 <td>if</td>
@@ -1057,7 +1128,7 @@ out simple (or empty!) and be augmented over time.</p>
 </tr>
 <tr>
 <td>match</td>
-<td>A regex that will be applied to <strong>text messages</strong> using Python's <a href="https://docs.python.org/3/library/re.html#re.search"><code>re.search()</code></a>. If the message is an <strong>object message</strong> or does not match the regex, the rule is skipped. The regex may contain named capture groups using the <code>(?P&lt;name&gt;...)</code> syntax in the regex. These are then made available as Jinja rendering variables for use in a <code>template</code> to produce a new message text. Slacker also populates the <code>msg</code> parameter with the full message text.</td>
+<td>A regex that will be applied to <strong>text messages</strong> using Python's <a href="https://docs.python.org/3/library/re.html#re.search"><code>re.search()</code></a>. If the message is an <strong>object message</strong>, or does not match the regex, the rule is skipped. The results of the match are made available as Jinja rendering variables for use in <code>if</code> and <code>template</code> generation. See <a href="#regular-expressions-in-rules">Regular Expressions in Rules</a>.</td>
 </tr>
 <tr>
 <td>preamble</td>
@@ -1065,7 +1136,7 @@ out simple (or empty!) and be augmented over time.</p>
 </tr>
 <tr>
 <td>template</td>
-<td>A Jinja template used to generate the actual message to be sent to Slack. This is rendered with the attributes from an <strong>object message</strong> or the regex capture groups matched from a <strong>text message</strong>. If the rendering process fails for any reason (e.g. malformed Jinja), the rule is skipped.</td>
+<td>A Jinja template used to generate the actual message to be sent to Slack. This is rendered with the attributes from an <strong>object message</strong> or the regex capture groups matched from a <strong>text message</strong>. If the rendering process fails for any reason (e.g. malformed Jinja), the rule is skipped. If not specified, the original incoming message text is used as the message content.</td>
 </tr>
 </tbody>
 </table>
@@ -1103,12 +1174,20 @@ out simple (or empty!) and be augmented over time.</p>
 <td>The AWS account ID.</td>
 </tr>
 <tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;aws.account_name</td>
+<td>The AWS account alias, if the account has one, otherwise the AWS account ID. This can be overridden by setting the <code>AWS_ACCOUNT_NAME</code> <a href="04-installation-and-usage.html#slacker-lambda-environment-variables">environment variable</a> on the slacker Lambda.</td>
+</tr>
+<tr>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;aws.Arn</td>
 <td>A class that takes an ARN and makes the individual components available as the following attributes: <code>partition</code>, <code>service</code>, <code>region</code>, <code>account</code>, <code>resource</code>. e.g. <code>{{ aws.Arn("arn:aws:sns:us-east-1:123456789012:xyzzy").region }}</code> is <code>us-east-1</code>.</td>
 </tr>
 <tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;aws.region</td>
+<td>The AWS region name (e.g. <code>us-east-1</code>).</td>
+</tr>
+<tr>
 <td>data</td>
-<td>Dictionary containing attributes extracted from the source message by a <code>match</code> regex applied to a <strong>text message</strong> or the decoded content of an <strong>object message</strong>.</td>
+<td>Object containing attributes extracted from the source message by a <code>match</code> regex applied to a <strong>text message</strong> or the decoded content of an <strong>object message</strong>.</td>
 </tr>
 <tr>
 <td>datetime</td>
@@ -1119,11 +1198,39 @@ out simple (or empty!) and be augmented over time.</p>
 <td>The Python <code>datetime.date</code> module.</td>
 </tr>
 <tr>
-<td>msg</td>
-<td>The original source message string.</td>
+<td>link()</td>
+<td>A function that takes a URL and optional text argument and generates Slack compatible hyperlink syntax. e.g. <code>link('https://example.com')</code> or <code>link('https://example.com', 'Visit example.com')</code></td>
 </tr>
 <tr>
-<td>now</td>
+<td>msg</td>
+<td>An object containing attributes associated with the incoming message as follows...</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.slacker_id</td>
+<td>A unique identifier for the message that can be used to find the full original message contents. See <a href="#message-logging">Logging</a>.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.source_id</td>
+<td>The webhook sourceId.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.source_name</td>
+<td>The webhook source name. If set, this is generally a slightly more human friendly version of the sourceId.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.subject</td>
+<td>The message subject, if any.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.text</td>
+<td>The original message text.</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;msg.timestamp</td>
+<td>An epoch timestamp for the message.</td>
+</tr>
+<tr>
+<td>now()</td>
 <td>A function that takes an optional timezone name (default <code>UTC</code>) and returns a timezone aware Python datetime object. e.g. <code>now()</code> or <code>now('Australia/Melbourne')</code>.</td>
 </tr>
 <tr>
@@ -1131,7 +1238,7 @@ out simple (or empty!) and be augmented over time.</p>
 <td>The Python <code>re</code> (regex) module.</td>
 </tr>
 <tr>
-<td>time_of_day</td>
+<td>current_time()</td>
 <td>A function that takes an optional timezone name (default <code>UTC</code>) and returns the current time as a string of the form <code>HH:MM:SS</code>. e.g. <code>current_time('UTC')</code> or <code>current_time('Australia/Melbourne')</code>.</td>
 </tr>
 <tr>
@@ -1140,6 +1247,27 @@ out simple (or empty!) and be augmented over time.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="regular-expressions-in-rules">Regular Expressions in Rules<a class="headerlink" href="#regular-expressions-in-rules" title="Permanent link">&para;</a></h2>
+<p><a href="#message-rules">Message rules</a> may contain a <code>match</code> key that specifies a <a href="https://docs.python.org/3/library/re.html#regular-expression-syntax">Python style regular expression</a> (regex) that will be applied to <strong>text messages</strong>. If the regex matches, the rule is selected (subject to any <code>if</code> condition).</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Python's <a href="https://docs.python.org/3/library/re.html#re.search"><code>re.search()</code></a>
+is used. i.e. Matches are not anchored to the beginning of the string by
+default.</p>
+</div>
+<p>Regexes are not applied to <strong>object messages</strong>.</p>
+<p>The regex may contain either named, or unnamed capture groups, but not both.
+Named groups are much safer for anything other than the simplest of patterns.</p>
+<p>The results of the match are made available to the <a href="#jinja-rendering">Jinja rendering
+process</a> as the <code>data</code> object.</p>
+<p>If the regex contains named groups using the <code>(?P&lt;name&gt;...)</code> syntax, the <code>data</code>
+object passed to the <a href="#jinja-rendering">Jinja rendering process</a> is a dictionary
+containing all the <em>named</em> subgroups of the match, keyed by the subgroup name.</p>
+<p>If the regex contains only unnamed groups, the <code>data</code> object passed to the
+<a href="#jinja-rendering">Jinja rendering process</a> is a tuple containing all the
+subgroups of the match.</p>
+<p>If the regex does not contain any groups, the <code>data</code> object passed to the <a href="#jinja-rendering">Jinja
+rendering process</a> is a string containing the matched string.</p>
 <h2 id="the-wildcard-webhook">The Wildcard Webhook<a class="headerlink" href="#the-wildcard-webhook" title="Permanent link">&para;</a></h2>
 <p>The <em>wildcard webhook</em> is a <a href="#the-webhooks-table">webhooks table</a> entry with a
 <code>sourceId</code> of <code>*</code>.</p>
@@ -1174,6 +1302,76 @@ wildcard webhook is used in this instance. Other fields are ignored.</p>
 <p>A sample set of rules for the wildcard webhook is provided in the
 <a href="06-rule-library.html#general-purpose-rules">rule library</a>.</p>
 </div>
+<h2 id="message-logging">Message Logging<a class="headerlink" href="#message-logging" title="Permanent link">&para;</a></h2>
+<p>If slacker is <a href="04-installation-and-usage.html#slacker-lambda-environment-variables">configured to log messages</a>
+in CloudWatch, entries like this are written to log group <code>/aws/lambda/slacker</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><span class="p">{</span>
+</span><span id="__span-4-2"><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><span class="w">  </span><span class="nt">&quot;slackerId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AAECPR9qbwTqaD3o&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><span class="w">  </span><span class="nt">&quot;sourceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:sns:us-east-1:...&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><span class="w">  </span><span class="nt">&quot;sourceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SNS:...&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Whatever&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1749106337.055</span><span class="p">,</span>
+</span><span id="__span-4-8"><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;incoming&quot;</span>
+</span><span id="__span-4-9"><span class="p">}</span>
+</span></code></pre></div>
+<p>On rare occasions, it is helpful to be able to see the original message detail.
+This is easy to do using the details from the message footer in Slack, as shown
+below.</p>
+<p><img alt="" src="img/samples/footer-example.png" /></p>
+<p>The footer contains:</p>
+<ul>
+<li>AWS account name / alias (<code>slacker-demo</code> in this example)</li>
+<li>AWS region (<code>ap-southeast-2</code>)</li>
+<li><code>slackerId</code>, (<code>AAECPR9qbwTqaD3o</code>) a key into the CloudWatch log group
+    <code>/aws/lambda/slacker</code> for the message.</li>
+</ul>
+<p>The first two indicate where to find the <code>/aws/lambda/slacker</code> log group. The
+<code>slackerId</code> will locate the original message within that log group using the
+following search syntax in the CloudWatch logs console:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1">{ $.slackerId=&quot;AAECPR9qbwTqaD3o&quot; }
+</span></code></pre></div>
+<p>Alternatively, the following CloudWatch Logs Insights query can be used:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1">fields @timestamp, @message
+</span><span id="__span-6-2">| filter slackerId=&quot;AAECPR9qbwTqaD3o&quot;
+</span></code></pre></div>
+<h2 id="time-based-rules">Time Based Rules<a class="headerlink" href="#time-based-rules" title="Permanent link">&para;</a></h2>
+<p>Slacker can effectively enable or disable message rules at specific times of
+day, or days of the week, by combining the <code>if</code> attribute of a <a href="#message-rules">message
+rule</a> with the various date / time functions provided as part of
+the <a href="#jinja-rendering">Jinja rendering</a> process.</p>
+<p>Time based rules can also be used to alter the way in which messages are handled
+at different times. For example, messages can be diverted to a different Slack
+channel it different times of day by adding a time based condition and an
+override <code>channel</code> to specific rules.</p>
+<p>For example, the following rules would cause messages to be dropped outside of
+business hours in Sydney.</p>
+<div class="language-yaml+jinja highlight"><pre><span></span><code><span id="__span-7-1"><span class="nt">rules</span><span class="p">:</span>
+</span><span id="__span-7-2"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Drop all object messages outside business hours</span>
+</span><span id="__span-7-3"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+</span><span id="__span-7-4"><span class="w">      </span><span class="cp">{{</span>
+</span><span id="__span-7-5">        <span class="nv">now</span><span class="o">(</span><span class="s2">&quot;Australia/Sydney&quot;</span><span class="o">)</span><span class="nv">.weekday</span><span class="o">()</span> <span class="o">&gt;</span> <span class="m">4</span> 
+</span><span id="__span-7-6">        <span class="k">or</span>
+</span><span id="__span-7-7">        <span class="k">not</span> <span class="s2">&quot;08:00:00&quot;</span> <span class="o">&lt;=</span> <span class="nv">current_time</span><span class="o">(</span><span class="s2">&quot;Australia/Sydney&quot;</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="s2">&quot;18:00:00&quot;</span>
+</span><span id="__span-7-8">      <span class="cp">}}</span>
+</span><span id="__span-7-9"><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drop</span>
+</span><span id="__span-7-10"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;#&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Drop all text messages outside business hours</span>
+</span><span id="__span-7-11"><span class="w">    </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;.&#39;</span>
+</span><span id="__span-7-12"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+</span><span id="__span-7-13"><span class="w">      </span><span class="cp">{{</span>
+</span><span id="__span-7-14">        <span class="nv">now</span><span class="o">(</span><span class="s2">&quot;Australia/Sydney&quot;</span><span class="o">)</span><span class="nv">.weekday</span><span class="o">()</span> <span class="o">&gt;</span> <span class="m">4</span> 
+</span><span id="__span-7-15">        <span class="k">or</span>
+</span><span id="__span-7-16">        <span class="k">not</span> <span class="s2">&quot;08:00:00&quot;</span> <span class="o">&lt;=</span> <span class="nv">current_time</span><span class="o">(</span><span class="s2">&quot;Australia/Sydney&quot;</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="s2">&quot;18:00:00&quot;</span>
+</span><span id="__span-7-17">      <span class="cp">}}</span>
+</span><span id="__span-7-18"><span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drop</span>
+</span></code></pre></div>
+<p>Note that the <code>if</code> element is only evaluated for <strong>object messages</strong>. The first
+of the rules above handles messages that arrive at slacker as JSON blobs. These
+are automatically converted to <strong>object messages</strong> by slacker.</p>
+<p>For <strong>text messages</strong>, we must force slacker to convert these to an <strong>object
+message</strong> by specifying a <code>match</code> element. The second rule contains a trivial
+regex that will match all text messages. See <a href="#regular-expressions-in-rules">Regular Expressions in
+Rules</a> for more information.</p>
 
 
 
@@ -1209,7 +1407,7 @@ wildcard webhook is used in this instance. Other fields are ignored.</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.6.0
+            v2.7.0
           </div>
         </div>
       </div>

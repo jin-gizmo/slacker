@@ -428,6 +428,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#webhook-setup-in-slack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook Setup in Slack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installing-the-slacker-aws-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -444,17 +455,6 @@
     <span class="md-ellipsis">
       
         Configuration Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logging
       
     </span>
   </a>
@@ -704,6 +704,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#webhook-setup-in-slack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook Setup in Slack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installing-the-slacker-aws-components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -720,17 +731,6 @@
     <span class="md-ellipsis">
       
         Configuration Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logging
       
     </span>
   </a>
@@ -889,6 +889,16 @@ first.</p>
 seem to support it. The rest of the world seem to manage OK(-ish) with PyPI
 for far more complex packages than SAM.  ¯_(ツ)_/¯</p>
 </div>
+<h2 id="webhook-setup-in-slack">Webhook Setup in Slack<a class="headerlink" href="#webhook-setup-in-slack" title="Permanent link">&para;</a></h2>
+<p>Slacker uses Slack's <a href="https://docs.slack.dev/legacy/legacy-custom-integrations/legacy-custom-integrations-incoming-webhooks">incoming webhooks custom
+integration</a>
+mechanism to send messages. The management section for these can be found in
+Slack <a href="https://www.slack.com/apps/manage/custom-integrations">here</a>.</p>
+<p>There is nothing else you need to install in your workspace.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Token based webhooks are a legacy integration method but they work just fine.</p>
+</div>
 <h2 id="installing-the-slacker-aws-components">Installing the Slacker AWS Components<a class="headerlink" href="#installing-the-slacker-aws-components" title="Permanent link">&para;</a></h2>
 <p>With AWS SAM installed, the installation / update process for slacker is as
 follows:</p>
@@ -940,18 +950,6 @@ relating to the CloudFormation stack mean:</p>
 </tbody>
 </table>
 <p>Other stack parameters are self-explanatory.</p>
-<h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
-<p>If slacker is configured to log messages in CloudWatch, the log entries look
-like this:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><span class="p">{</span>
-</span><span id="__span-1-2"><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><span class="w">  </span><span class="nt">&quot;sourceId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:sns:us-east-1:...&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><span class="w">  </span><span class="nt">&quot;sourceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SNS:...&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Whatever&quot;</span><span class="p">,</span>
-</span><span id="__span-1-6"><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1749106337.055</span><span class="p">,</span>
-</span><span id="__span-1-7"><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;incoming&quot;</span>
-</span><span id="__span-1-8"><span class="p">}</span>
-</span></code></pre></div>
 <h3 id="slacker-lambda-environment-variables">Slacker Lambda Environment Variables<a class="headerlink" href="#slacker-lambda-environment-variables" title="Permanent link">&para;</a></h3>
 <p>The slacker Lambda supports the following environment variables.</p>
 <table>
@@ -964,14 +962,19 @@ like this:</p>
 </thead>
 <tbody>
 <tr>
+<td>AWS_ACCOUNT_NAME</td>
+<td>An arbitrary label for the AWS account for human consumption.</td>
+<td>AWS account alias</td>
+</tr>
+<tr>
 <td>LOGLEVEL</td>
 <td>One of the standard Python logging levels (<code>debug</code>, <code>info</code>, ...).</td>
 <td><code>info</code></td>
 </tr>
 <tr>
 <td>LOG_MESSAGES</td>
-<td>If set to <code>1</code>, log messages to CloudWatch prior to processing.</td>
-<td><code>0</code></td>
+<td>If set to <code>1</code>, log messages to CloudWatch prior to processing. See <a href="02-how-it-works.html#message-logging">Message Logging</a>.</td>
+<td><code>1</code></td>
 </tr>
 <tr>
 <td>SLACKER_COLOUR</td>
@@ -992,12 +995,12 @@ like this:</p>
 </table>
 <h2 id="the-slacker-cli">The Slacker CLI<a class="headerlink" href="#the-slacker-cli" title="Permanent link">&para;</a></h2>
 <p>The <a href="#the-slacker-cli">slacker CLI</a> is installed with pip:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1">pip<span class="w"> </span>install<span class="w"> </span>jinslacker
-</span><span id="__span-2-2">slacker<span class="w"> </span>--help
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1">pip<span class="w"> </span>install<span class="w"> </span>jinslacker
+</span><span id="__span-1-2">slacker<span class="w"> </span>--help
 </span></code></pre></div>
 It can also be built from the repo:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><span class="c1"># Output is in dist/pkg directory</span>
-</span><span id="__span-3-2">make<span class="w"> </span>pkg
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><span class="c1"># Output is in dist/pkg directory</span>
+</span><span id="__span-2-2">make<span class="w"> </span>pkg
 </span></code></pre></div>
 <h3 id="slacker-cli-environment-variables">Slacker CLI Environment Variables<a class="headerlink" href="#slacker-cli-environment-variables" title="Permanent link">&para;</a></h3>
 <p>The slacker CLI supports the following environment variables.</p>
@@ -1020,48 +1023,48 @@ It can also be built from the repo:</p>
 <h3 id="cli-usage">CLI Usage<a class="headerlink" href="#cli-usage" title="Permanent link">&para;</a></h3>
 <details>
 <summary>Command Usage</summary>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1">usage: slacker [-h] [-v] {check,dump,get,list,put,restart,test} ...
-</span><span id="__span-4-2">
-</span><span id="__span-4-3">Manage slacker webhooks and rules.
-</span><span id="__span-4-4">
-</span><span id="__span-4-5">positional arguments:
-</span><span id="__span-4-6">  {check,dump,get,list,put,restart,test}
-</span><span id="__span-4-7">    check           Check slacker configuration.
-</span><span id="__span-4-8">    dump            Dump the DynamoDB webhooks table.
-</span><span id="__span-4-9">    get             Fetch an entry from the DynamoDB webhooks table.
-</span><span id="__span-4-10">    list            List source IDs in the DynamoDB webhooks table.
-</span><span id="__span-4-11">    put             Create / update an entry in the DynamoDB webhooks table.
-</span><span id="__span-4-12">    restart         Restart the slacker Lambda.
-</span><span id="__span-4-13">    test            Test a message for processing against a webhooks entry.
-</span><span id="__span-4-14">
-</span><span id="__span-4-15">options:
-</span><span id="__span-4-16">  -h, --help        show this help message and exit
-</span><span id="__span-4-17">  -v, --version     Show version and exit.
-</span><span id="__span-4-18">
-</span><span id="__span-4-19">Full user guide at https://jin-gizmo.github.io/slacker
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1">usage: slacker [-h] [-v] {check,dump,get,list,put,restart,test} ...
+</span><span id="__span-3-2">
+</span><span id="__span-3-3">Manage slacker webhooks and rules.
+</span><span id="__span-3-4">
+</span><span id="__span-3-5">positional arguments:
+</span><span id="__span-3-6">  {check,dump,get,list,put,restart,test}
+</span><span id="__span-3-7">    check           Check slacker configuration.
+</span><span id="__span-3-8">    dump            Dump the DynamoDB webhooks table.
+</span><span id="__span-3-9">    get             Fetch an entry from the DynamoDB webhooks table.
+</span><span id="__span-3-10">    list            List source IDs in the DynamoDB webhooks table.
+</span><span id="__span-3-11">    put             Create / update an entry in the DynamoDB webhooks table.
+</span><span id="__span-3-12">    restart         Restart the slacker Lambda.
+</span><span id="__span-3-13">    test            Test a message for processing against a webhooks entry.
+</span><span id="__span-3-14">
+</span><span id="__span-3-15">options:
+</span><span id="__span-3-16">  -h, --help        show this help message and exit
+</span><span id="__span-3-17">  -v, --version     Show version and exit.
+</span><span id="__span-3-18">
+</span><span id="__span-3-19">Full user guide at https://jin-gizmo.github.io/slacker
 </span></code></pre></div>
 </details>
 <p>Typical usage might be something like this:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><span class="c1"># Get help</span>
-</span><span id="__span-5-2">slacker<span class="w"> </span>--help
-</span><span id="__span-5-3"><span class="c1"># Get help on a subcommand</span>
-</span><span id="__span-5-4">slacker<span class="w"> </span>list<span class="w"> </span>--help
-</span><span id="__span-5-5">
-</span><span id="__span-5-6"><span class="c1"># List webhooks table source IDs</span>
-</span><span id="__span-5-7">slacker<span class="w"> </span>list
-</span><span id="__span-5-8">
-</span><span id="__span-5-9"><span class="c1"># Download one. Note that this will populate the `account` field in the</span>
-</span><span id="__span-5-10"><span class="c1"># downloaded webhook data.</span>
-</span><span id="__span-5-11">slacker<span class="w"> </span>get<span class="w"> </span>my-source-id<span class="w"> </span>&gt;<span class="w"> </span>my-source-id.yaml
-</span><span id="__span-5-12">
-</span><span id="__span-5-13"><span class="c1"># Test out the rules in a webhook file to see what they do to a message.</span>
-</span><span id="__span-5-14">slacker<span class="w"> </span><span class="nb">test</span><span class="w"> </span>my-source-id.yaml<span class="w"> </span>&lt;<span class="w"> </span>message.txt
-</span><span id="__span-5-15">
-</span><span id="__span-5-16"><span class="c1"># Upload the webhooks entry back to DynamoDB but keep a backup of the original</span>
-</span><span id="__span-5-17">slacker<span class="w"> </span>put<span class="w"> </span>--backup<span class="w"> </span>my-source-id-orig.yaml<span class="w"> </span>my-source-id.yaml
-</span><span id="__span-5-18">
-</span><span id="__span-5-19"><span class="c1"># Backup all webhooks to a zip file</span>
-</span><span id="__span-5-20">slacker<span class="w"> </span>dump<span class="w"> </span>webhooks.zip
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><span class="c1"># Get help</span>
+</span><span id="__span-4-2">slacker<span class="w"> </span>--help
+</span><span id="__span-4-3"><span class="c1"># Get help on a subcommand</span>
+</span><span id="__span-4-4">slacker<span class="w"> </span>list<span class="w"> </span>--help
+</span><span id="__span-4-5">
+</span><span id="__span-4-6"><span class="c1"># List webhooks table source IDs</span>
+</span><span id="__span-4-7">slacker<span class="w"> </span>list
+</span><span id="__span-4-8">
+</span><span id="__span-4-9"><span class="c1"># Download one. Note that this will populate the `account` field in the</span>
+</span><span id="__span-4-10"><span class="c1"># downloaded webhook data.</span>
+</span><span id="__span-4-11">slacker<span class="w"> </span>get<span class="w"> </span>my-source-id<span class="w"> </span>&gt;<span class="w"> </span>my-source-id.yaml
+</span><span id="__span-4-12">
+</span><span id="__span-4-13"><span class="c1"># Test out the rules in a webhook file to see what they do to a message.</span>
+</span><span id="__span-4-14">slacker<span class="w"> </span><span class="nb">test</span><span class="w"> </span>my-source-id.yaml<span class="w"> </span>&lt;<span class="w"> </span>message.txt
+</span><span id="__span-4-15">
+</span><span id="__span-4-16"><span class="c1"># Upload the webhooks entry back to DynamoDB but keep a backup of the original</span>
+</span><span id="__span-4-17">slacker<span class="w"> </span>put<span class="w"> </span>--backup<span class="w"> </span>my-source-id-orig.yaml<span class="w"> </span>my-source-id.yaml
+</span><span id="__span-4-18">
+</span><span id="__span-4-19"><span class="c1"># Backup all webhooks to a zip file</span>
+</span><span id="__span-4-20">slacker<span class="w"> </span>dump<span class="w"> </span>webhooks.zip
 </span></code></pre></div>
 <h2 id="adding-message-sources">Adding Message Sources<a class="headerlink" href="#adding-message-sources" title="Permanent link">&para;</a></h2>
 <p>Slacker supports messages received from:</p>
@@ -1096,8 +1099,7 @@ seems to get the permissions correct more consistently. IMO.</p>
     per log group, which may limit your options.</li>
 <li>Create a new entry in the <a href="02-how-it-works.html#the-webhooks-table">webhooks table</a> with the
     <code>sourceId</code> set to the log group name prefixed with <code>logs:</code>, and whatever
-    rules and destination Slack channel and <a href="02-how-it-works.html#message-rules">rules</a> are
-    appropriate.</li>
+    destination Slack channel and <a href="02-how-it-works.html#message-rules">rules</a> are appropriate.</li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1178,15 +1180,15 @@ include the following fields for this purpose:</p>
 </tbody>
 </table>
 <p>This example shows how to do it using the AWS CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1">aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>slacker<span class="w"> </span>response.json<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><span class="w">    </span>--cli-binary-format<span class="w"> </span>raw-in-base64-out<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><span class="w">    </span>--payload<span class="w"> </span><span class="s1">&#39;</span>
-</span><span id="__span-6-4"><span class="s1">{</span>
-</span><span id="__span-6-5"><span class="s1">    &quot;SlackerSourceId&quot;: &quot;my-source-id&quot;,</span>
-</span><span id="__span-6-6"><span class="s1">    &quot;SlackerSourceName&quot;: &quot;My App&quot;,</span>
-</span><span id="__span-6-7"><span class="s1">    &quot;more&quot;: &quot;data&quot;,</span>
-</span><span id="__span-6-8"><span class="s1">    &quot;...&quot;: &quot;...&quot;</span>
-</span><span id="__span-6-9"><span class="s1">}&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1">aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>slacker<span class="w"> </span>response.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><span class="w">    </span>--cli-binary-format<span class="w"> </span>raw-in-base64-out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><span class="w">    </span>--payload<span class="w"> </span><span class="s1">&#39;</span>
+</span><span id="__span-5-4"><span class="s1">{</span>
+</span><span id="__span-5-5"><span class="s1">    &quot;SlackerSourceId&quot;: &quot;my-source-id&quot;,</span>
+</span><span id="__span-5-6"><span class="s1">    &quot;SlackerSourceName&quot;: &quot;My App&quot;,</span>
+</span><span id="__span-5-7"><span class="s1">    &quot;more&quot;: &quot;data&quot;,</span>
+</span><span id="__span-5-8"><span class="s1">    &quot;...&quot;: &quot;...&quot;</span>
+</span><span id="__span-5-9"><span class="s1">}&#39;</span>
 </span></code></pre></div>
 
 
@@ -1223,7 +1225,7 @@ include the following fields for this purpose:</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.6.0
+            v2.7.0
           </div>
         </div>
       </div>

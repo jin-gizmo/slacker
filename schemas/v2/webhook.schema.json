@@ -48,6 +48,10 @@
                     "description": "Override the channel for this rule only.\n",
                     "type": "string"
                 },
+                "color": {
+                    "$ref": "#/$defs/Colour",
+                    "description": "Override the default color for the Slack sidebar.\n"
+                },
                 "colour": {
                     "$ref": "#/$defs/Colour",
                     "description": "Override the default colour for the Slack sidebar.\n"
@@ -72,7 +76,7 @@
             "type": "object"
         }
     },
-    "$id": "https://jin-gizmo.github.io/slacker/schemas/webhook.schema.yaml",
+    "$id": "https://jin-gizmo.github.io/slacker/schemas/webhook.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$schemaVersion": 2,
     "additionalProperties": false,
@@ -115,6 +119,10 @@
         "channel": {
             "$ref": "#/$defs/NonEmptyString",
             "description": "An alias for a Slack webhook URL that will be looked up in the channels table.\n"
+        },
+        "color": {
+            "$ref": "#/$defs/Colour",
+            "description": "Slack messages will have a color bar displayed down the left margin specified by the value of this field. This can be any hex color code (prefixed with '#') or one of the Slack special values `good`, `warning`, or `danger`.\n"
         },
         "colour": {
             "$ref": "#/$defs/Colour",

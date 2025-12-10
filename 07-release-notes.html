@@ -573,6 +573,41 @@
 
 <h1 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h1>
 <h2 id="version-2">Version 2<a class="headerlink" href="#version-2" title="Permanent link">&para;</a></h2>
+<h4 id="version-270">Version 2.7.0<a class="headerlink" href="#version-270" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>Added the following new <a href="02-how-it-works.html#jinja-rendering">Jinja rendering parameters</a>:</p>
+<ul>
+<li><code>aws.account_name</code> : AWS account name / alias</li>
+<li><code>aws.region</code>: AWS region name</li>
+<li><code>link</code>: Generate a hyperlink in Slack compatible syntax</li>
+<li><code>msg</code>: An object containing attributes associated with the
+    incoming message.</li>
+</ul>
+</li>
+<li>
+<p>The <code>match</code> attribute in the <a href="02-how-it-works.html#the-webhooks-table">webhooks</a> table now
+    accepts patterns with unnamed capture groups, and without any capture groups,
+    in addition to the previous behaviour of named capture groups. See
+    <a href="02-how-it-works.html#regular-expressions-in-rules">Regular Expressions in Rules</a>.</p>
+</li>
+<li>
+<p>Added the <code>slackerId</code> into logged messages to enable the original message to
+    be easily traced. See <a href="02-how-it-works.html#message-logging">Message Logging</a>.</p>
+</li>
+<li>
+<p>Updated the Slack message footer to indicate the AWS account, region and
+    <code>slackerId</code> for incoming messages.</p>
+</li>
+<li>
+<p>The <code>slacker put</code> command used to deploy <a href="02-how-it-works.html#the-webhooks-table">webhooks</a>
+    now restarts the slacker Lambda to empty the internal webhook cache. See
+    <a href="05-developing-message-rules.html#deploying-rules">Deploying Rules</a> for more information.</p>
+</li>
+<li>
+<p>Added more of the test cases into the repo.</p>
+</li>
+</ul>
 <h4 id="version-260">Version 2.6.0<a class="headerlink" href="#version-260" title="Permanent link">&para;</a></h4>
 <p>This version is functionally compatible with v2.5 insofar as the main code is
 concerned. A number of incremental functional enhancements have been made.
@@ -657,7 +692,7 @@ documentation.</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.6.0
+            v2.7.0
           </div>
         </div>
       </div>
