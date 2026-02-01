@@ -1,3 +1,17 @@
+include etc/make/help.mk
+
+HELP_CATEGORY=Getting started
+
+#+ What do you want to make?
+
+# Force help category ordering
+#:cat Getting started
+#:cat Build targets
+#:cat Install targets
+#:cat User guide / documentation targets
+#:cat Test targets
+#:cat Miscellaneous targets
+
 pypi=pypi
 
 # ------------------------------------------------------------------------------
@@ -14,42 +28,11 @@ CUSTOM_DICT=$(realpath .aspell-dict)
 
 
 # ------------------------------------------------------------------------------
-help:
-	@echo
-	@echo What do you want to make?  Available targets are:
-	@echo
-	@echo "[31mGetting started[0m"
-	@echo "   init:      Initialise / update the project (create venv etc.). Idempotent."
-	@echo "   help:      Print help."
-	@echo
-	@echo "[31mBuild targets[0m"
-	@echo "   pkg:       Build the Python package."
-	@echo "   build:     Build the Lambda deployment package with SAM."
-	@echo
-	@echo "[31mInstall targets[0m"
-	@echo "   install:   Deploy / update slacker in AWS."
-	@echo "   pypi:      Upload the pkg to the \"$(pypi)\" PyPI server via twine. The"
-	@echo "              \"$(pypi)\" server must be defined in ~/.pypirc. Add pypi=..."
-	@echo "              to specify a different index server entry in ~/.pypirc."
-	@echo
-	@echo "[31mUser guide / documentation targets[0m"
-	@echo "   doc:       Make the user guide into consolidated markdown."
-	@echo "   preview:   Build and preview the mkdocs version of the user guide."
-	@echo "   publish:   Publish the user guide to GitHub pages (must be on master branch)."
-	@echo "   spell:     Spell check the user guide (requires aspell)."
-	@echo
-	@echo "[31mMiscellaneous targets[0m"
-	@echo "   check:     Run code quality / SAM lint checks."
-	@echo "   clean:     Remove the ephemeral stuff."
-	@echo
-	@echo "[31mTesting targets[0m"
-	@echo "   coverage:  Run the unit tests and produce a coverage report."
-	@echo "   test:      Run the unit tests."
-	@echo
+#:cat Getting started
 
-
-# ------------------------------------------------------------------------------
-# Setup targets
+## Initialise / update the project (create venv etc.). Idempotent.
+init:	_venv
+	git config core.hooksPath etc/git-hooks
 
 _venv_is_off:
 	@if [ "$$VIRTUAL_ENV" != "" ] ; \
@@ -85,22 +68,22 @@ _venv:	_venv_is_off
 		: ; \
 	)
 
-init:	_venv
-	git config core.hooksPath etc/git-hooks
-
 # ------------------------------------------------------------------------------
-#  Build targets
+#:cat Build targets
 
+## Build the Python package
 pkg:	_venv_is_on
 	@mkdir -p dist/pkg
 	python3 setup.py sdist --dist-dir dist/pkg
 
+## Build the Lambda deployment package with SAM.
 build:	_venv_is_on
 	sam build
-	
-# ------------------------------------------------------------------------------
-#  Install targets
 
+# ------------------------------------------------------------------------------
+#:cat Install targets
+
+## Deploy / update slacker in AWS
 install: check build
 	sam deploy --resolve-s3 --guided --stack-name "$(NAME)" \
 		--tags "version=$(VERSION) repo-url=$(REPO)"
@@ -108,14 +91,26 @@ install: check build
 ~/.pypirc:
 	$(error You need to create $@ with an index-server section for "$(pypi)")
 
+## Upload the pkg to the `pypi` PyPI server via twine. The `pypi` server must be
+## defined in `~/.pypirc`.
+#:opt pypi
 pypi:	_venv_is_on ~/.pypirc pkg
 	twine upload -r "$(pypi)" "dist/pkg/$(PKG)-$(VERSION).tar.gz"
 
 # ------------------------------------------------------------------------------
-# Documentation targets
+#:cat User guide / documentation targets
+
+## Make the user guide into consolidated markdown.
+doc:
+## Build and preview the mkdocs version of the user guide.
+preview:
+## Publish the user guide to GitHub pages (must be on master branch).
+publish:
+
 doc preview publish: _venv_is_on
 	$(MAKE) -C doc $(MAKECMDGOALS) dist=$(abspath dist)
 
+## Spell check the user guide (requires **aspell**).
 spell:
 	@for i in *.md ; \
 	do \
@@ -125,20 +120,25 @@ spell:
 	@$(MAKE) -C doc $(MAKECMDGOALS) dist=$(abspath dist)
 
 # ------------------------------------------------------------------------------
-#  Test targets
+#:cat Test targets
 
+## Run the unit tests and produce a coverage report.
 coverage: _venv_is_on
 	@mkdir -p dist/test
 	pytest --cov=. --cov-report html:dist/test/htmlcov -n "$(PYTEST_WORKERS)"
 
+## Run the unit tests.
 test:	_venv_is_on
 	pytest -v -s -n "$(PYTEST_WORKERS)"
 
 # ------------------------------------------------------------------------------
-#  Miscellaneous
+#:cat Miscellaneous targets
 
+## Run code quality / SAM lint checks.
 check:	_venv_is_on
 	etc/git-hooks/pre-commit
 	sam validate --lint
+
+## Remove the ephemeral stuff.
 clean:
 	$(RM) -r .aws_sam dist
