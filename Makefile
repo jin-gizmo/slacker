@@ -26,7 +26,6 @@ CUSTOM_DICT=$(realpath .aspell-dict)
 
 .PHONY: black help _venv_is_off _venv_is_on _venv update check cookie doc spell test coverage pypi
 
-
 # ------------------------------------------------------------------------------
 #:cat Getting started
 
@@ -47,7 +46,6 @@ _venv_is_on:
 		echo Activate your virtualenv for this operation ; \
 		exit 1 ; \
 	fi
-	
 
 # Setup the virtual environment
 _venv:	_venv_is_off
