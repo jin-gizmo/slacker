@@ -1,20 +1,20 @@
 # ex: sw=4 ts=4 et ai
-###############################################################################
+# ------------------------------------------------------------------------------
 # Makefile self-documenting help generator (POSIX awk compatible)
 # See https://github.com/jin-gizmo/makehelp for more information.
 #
-# Version 1.1.0
+# Version 2.0.0
 #
 #       If it ain't broke, it doesn't have enough features yet.
 #
 # Murray Andrews
 #
-###############################################################################
+# ------------------------------------------------------------------------------
 # This script is really 1.5 scripts. It is first run in a "preprocess" mode with
 # the output of `make -pn` as input to get the resolved make variable values.
 # These are annotated with the `#:var` and `#:tvar` directives. This is then fed
 # into the script again with the makefile content for help text generation.
-###############################################################################
+# ------------------------------------------------------------------------------
 
 BEGIN {
     DEBUG = ENVIRON["MAKEHELP_DEBUG"] + 0  # Enable / disable debugging output (use dprint())

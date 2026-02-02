@@ -2,7 +2,7 @@
 # This Makefile invokes the make autohelp awk script. 
 # See https://github.com/jin-gizmo/makehelp for more information.
 #
-# Version: 1.1.0
+# Version: 2.0.0
 #
 # This script should be included in the Makefile for which autohelp is required.
 # Thus:
