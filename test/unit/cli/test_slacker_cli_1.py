@@ -117,4 +117,4 @@ def test_slacker_cli_test_fail(scenario_path: Path, tmp_path, monkeypatch, capsy
     monkeypatch.setattr('sys.stdin', StringIO(json.dumps(scenario.input) + '\n'))
 
     assert slacker.main() == 1
-    assert f'{webhook_file}: Errors in webhooks entry' in capsys.readouterr().err.strip()
+    assert f'{webhook_file}: Error(s) in webhooks entry' in capsys.readouterr().err.strip()

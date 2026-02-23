@@ -157,6 +157,36 @@ slacker put --backup my-source-id-orig.yaml my-source-id.yaml
 slacker dump webhooks.zip
 ```
 
+### Command Line Completion
+
+!!! note
+    New in v2.8.0.
+
+The **slacker** CLI can produce command completion scripts for the most common
+shells (typically **zsh** or **bash**).
+
+```bash
+# Produce the command completion script for zsh
+slacker completion --shell zsh
+
+# ... and for bash ...
+slacker completion --shell bash
+```
+
+Place the resulting script wherever it needs to go in your environment.
+For **zsh** with **oh-my-zsh**, this would typically be something
+like `~/.oh-my-zsh/completions/_slacker`.
+
+!!! info
+    You will probably need to run `compinit` and/or `bashcompinit` and/or 
+    restart your shell after creating the completion script.
+
+!!! tip
+    The bash completion shell will not work on the 20 year old version of
+    **bash** that ships on macOS. Honestly, just switch to **zsh** which is now
+    the default shell on macOS anyway.
+
+
 ## Adding Message Sources
 
 Slacker supports messages received from:

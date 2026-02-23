@@ -1,4 +1,4 @@
-personal_ws-1.1 en 49 
+personal_ws-1.1 en 54 
 ARN
 Arn
 CLI
@@ -14,12 +14,15 @@ JinSlacker
 Jindabyne
 Jinja
 LOGLEVEL
+MakeHelp
 PyCharm
 PyPI
+README
 Regexes
 SNS
 SlackerSourceId
 SlackerSourceName
+TOCmark
 TTL
 VPC
 WEBHOOK
@@ -34,6 +37,7 @@ dynamoDbReadCapacity
 ish
 jinslacker
 lookups
+macOS
 maxMessageLen
 msg
 nav
@@ -48,3 +52,4 @@ tz
 url
 webhook
 webhooks
+zsh

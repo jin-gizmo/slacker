@@ -2,7 +2,9 @@ include etc/make/help.mk
 
 HELP_CATEGORY=Getting started
 
-#+ What do you want to make?
+#+ Welcome to **slacker**. What do you want to make?
+#- Help brought to you by **MakeHelp** - https://github.com/jin-gizmo/makehelp.
+
 
 # Force help category ordering
 #:cat Getting started
@@ -21,7 +23,7 @@ NAME=slacker
 PKG=jinslacker
 VERSION:=$(shell slacker/version.py)
 SRC=$(shell find slacker -path 'slacker/__pycache__' -prune -false -o -type f)
-PYTEST_WORKERS=2
+PYTEST_WORKERS=5
 CUSTOM_DICT=$(realpath .aspell-dict)
 
 .PHONY: black help _venv_is_off _venv_is_on _venv update check cookie doc spell test coverage pypi
@@ -140,3 +142,21 @@ check:	_venv_is_on
 ## Remove the ephemeral stuff.
 clean:
 	$(RM) -r .aws_sam dist
+
+## Update the TOC in `README.md`.
+toc:
+	@set -e ; \
+	tmp=$$(mktemp) ; \
+	z=1 ; \
+	trap '/bin/rm -f $$tmp; exit $$z' 0 ; \
+	etc/tocmark README.md > $$tmp || exit ; \
+	if cmp -s README.md $$tmp ; \
+	then \
+		echo "README.md already up to date" ; \
+	else \
+		cp README.md README.md.bak ; \
+		mv $$tmp README.md ; \
+		echo "README.md TOC updated" ; \
+	fi ; \
+	z=0
+

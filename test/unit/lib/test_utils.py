@@ -93,8 +93,10 @@ def test_iso8601_to_ts_fail(iso8601: str, error, match: str):
 def test_zip64_decode_data(td):
     # Copied from the AWS Lambda cloudwatch-logs test template
 
-    encoded_data = json.loads((td / 'cwatch-log-message.json').read_text())['awslogs']['data']
-    expected = json.loads((td / 'cwatch-log-decoded.json').read_text())
+    encoded_data = json.loads((td / 'lambda-events' / 'cwatch-log-message.json').read_text())[
+        'awslogs'
+    ]['data']
+    expected = json.loads((td / 'lambda-events' / 'cwatch-log-decoded.json').read_text())
     assert zip64_decode_data(encoded_data) == expected
 
 

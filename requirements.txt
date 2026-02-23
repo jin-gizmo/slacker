@@ -1,7 +1,9 @@
 # These are the extra requirements required to build but not for the lambda itself
 # ex: set ft=sh:
 
-# These are needed at run-time but are provided by AWS lambda
+# These are needed at run-time but are provided by AWS lambda.
+# Some are only needed by the CLI.
+argcomplete
 boto3
 jmespath
 jsonschema[format-nongpl]

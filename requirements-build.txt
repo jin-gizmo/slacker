@@ -20,9 +20,17 @@ ruff
 pytest
 pytest-xdist
 pytest-cov
+pytest-mock
 twine
 
-mkdocs
+# aaargh ... mkdocs has gone insane.
+mkdocs<mkdocs
+mkdocs-material
+mkdocs-material-extensions
+mkdocstrings[python]2
 mkdocs-material
 mkdocs-material-extensions
 mkdocstrings[python]
+
+moto
+shortuuid
