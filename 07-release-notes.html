@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="img/slacker-icon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
@@ -573,6 +573,38 @@
 
 <h1 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h1>
 <h2 id="version-2">Version 2<a class="headerlink" href="#version-2" title="Permanent link">&para;</a></h2>
+<h4 id="version-280">Version 2.8.0<a class="headerlink" href="#version-280" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>A new <code>completion</code> subcommand has been added to the <a href="04-installation-and-usage.html#the-slacker-cli">slacker
+    CLI</a> to generate command completion scripts for common
+    shells (<strong>zsh</strong>, <strong>bash</strong> etc.).  See <a href="04-installation-and-usage.html#command-line-completion">Command Line
+    Completion</a>.</p>
+</li>
+<li>
+<p>Start-up performance for the  <a href="04-installation-and-usage.html#the-slacker-cli">slacker CLI</a> has improved
+    significantly thanks to switching to lazy imports on the big packages.</p>
+</li>
+<li>
+<p>Fixed a bug in the <a href="04-installation-and-usage.html#the-slacker-cli">slacker CLI</a> <code>put</code> subcommand where
+    the slacker lambda was not restarted if the existing item was backed up.</p>
+</li>
+<li>
+<p>Other minor enhancements have been made to the CLI. Nothing worth writing
+    home about.</p>
+</li>
+<li>
+<p><a href="https://github.com/jin-gizmo/makehelp">MakeHelp</a> is now used to
+    auto-generate help for <strong>make</strong>.</p>
+</li>
+<li>
+<p><a href="https://github.com/jin-gizmo/tocmark">TOCmark</a> is now used to generate the
+    table of contents for the main README.</p>
+</li>
+<li>
+<p>Test coverage has increased from not bad to pretty good (99%).</p>
+</li>
+</ul>
 <h4 id="version-270">Version 2.7.0<a class="headerlink" href="#version-270" title="Permanent link">&para;</a></h4>
 <ul>
 <li>
@@ -692,7 +724,7 @@ documentation.</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.7.0
+            v2.8.0
           </div>
         </div>
       </div>
@@ -709,10 +741,10 @@ documentation.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

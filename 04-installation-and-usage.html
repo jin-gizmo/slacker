@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="img/slacker-icon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
@@ -511,6 +511,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#command-line-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Line Completion
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -781,6 +792,17 @@
     <span class="md-ellipsis">
       
         CLI Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-line-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Line Completion
       
     </span>
   </a>
@@ -1066,6 +1088,33 @@ It can also be built from the repo:</p>
 </span><span id="__span-4-19"><span class="c1"># Backup all webhooks to a zip file</span>
 </span><span id="__span-4-20">slacker<span class="w"> </span>dump<span class="w"> </span>webhooks.zip
 </span></code></pre></div>
+<h3 id="command-line-completion">Command Line Completion<a class="headerlink" href="#command-line-completion" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>New in v2.8.0.</p>
+</div>
+<p>The <strong>slacker</strong> CLI can produce command completion scripts for the most common
+shells (typically <strong>zsh</strong> or <strong>bash</strong>).</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><span class="c1"># Produce the command completion script for zsh</span>
+</span><span id="__span-5-2">slacker<span class="w"> </span>completion<span class="w"> </span>--shell<span class="w"> </span>zsh
+</span><span id="__span-5-3">
+</span><span id="__span-5-4"><span class="c1"># ... and for bash ...</span>
+</span><span id="__span-5-5">slacker<span class="w"> </span>completion<span class="w"> </span>--shell<span class="w"> </span>bash
+</span></code></pre></div>
+<p>Place the resulting script wherever it needs to go in your environment.
+For <strong>zsh</strong> with <strong>oh-my-zsh</strong>, this would typically be something
+like <code>~/.oh-my-zsh/completions/_slacker</code>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You will probably need to run <code>compinit</code> and/or <code>bashcompinit</code> and/or 
+restart your shell after creating the completion script.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The bash completion shell will not work on the 20 year old version of
+<strong>bash</strong> that ships on macOS. Honestly, just switch to <strong>zsh</strong> which is now
+the default shell on macOS anyway.</p>
+</div>
 <h2 id="adding-message-sources">Adding Message Sources<a class="headerlink" href="#adding-message-sources" title="Permanent link">&para;</a></h2>
 <p>Slacker supports messages received from:</p>
 <ul>
@@ -1180,15 +1229,15 @@ include the following fields for this purpose:</p>
 </tbody>
 </table>
 <p>This example shows how to do it using the AWS CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1">aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>slacker<span class="w"> </span>response.json<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><span class="w">    </span>--cli-binary-format<span class="w"> </span>raw-in-base64-out<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><span class="w">    </span>--payload<span class="w"> </span><span class="s1">&#39;</span>
-</span><span id="__span-5-4"><span class="s1">{</span>
-</span><span id="__span-5-5"><span class="s1">    &quot;SlackerSourceId&quot;: &quot;my-source-id&quot;,</span>
-</span><span id="__span-5-6"><span class="s1">    &quot;SlackerSourceName&quot;: &quot;My App&quot;,</span>
-</span><span id="__span-5-7"><span class="s1">    &quot;more&quot;: &quot;data&quot;,</span>
-</span><span id="__span-5-8"><span class="s1">    &quot;...&quot;: &quot;...&quot;</span>
-</span><span id="__span-5-9"><span class="s1">}&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1">aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>slacker<span class="w"> </span>response.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><span class="w">    </span>--cli-binary-format<span class="w"> </span>raw-in-base64-out<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><span class="w">    </span>--payload<span class="w"> </span><span class="s1">&#39;</span>
+</span><span id="__span-6-4"><span class="s1">{</span>
+</span><span id="__span-6-5"><span class="s1">    &quot;SlackerSourceId&quot;: &quot;my-source-id&quot;,</span>
+</span><span id="__span-6-6"><span class="s1">    &quot;SlackerSourceName&quot;: &quot;My App&quot;,</span>
+</span><span id="__span-6-7"><span class="s1">    &quot;more&quot;: &quot;data&quot;,</span>
+</span><span id="__span-6-8"><span class="s1">    &quot;...&quot;: &quot;...&quot;</span>
+</span><span id="__span-6-9"><span class="s1">}&#39;</span>
 </span></code></pre></div>
 
 
@@ -1225,7 +1274,7 @@ include the following fields for this purpose:</p>
       <div class="md-footer-social">
         <div class="md-copyright">
           <div class="md-copyright__highlight">
-            v2.7.0
+            v2.8.0
           </div>
         </div>
       </div>
@@ -1242,10 +1291,10 @@ include the following fields for this purpose:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "content.code.copy", {"icon": {"repo": "material/github"}}], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
