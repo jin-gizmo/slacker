@@ -18,13 +18,14 @@ from datetime import datetime
 from functools import cache, partial
 from getpass import getuser
 from importlib import resources
+from itertools import chain
 from pathlib import Path
 from socket import gethostname
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Final
 from zipfile import ZipFile
 
+import argcomplete
 import boto3
-import jsonschema
 import yaml
 from colorama import Fore, Style, init
 from pygments import highlight
@@ -80,6 +81,8 @@ heading = partial(_cprint, Fore.BLUE)
 @cache
 def get_webhook_schema_validator():
     """Load the webhook schema and return a validator for it."""
+    import jsonschema
+
     schema = yaml.safe_load(
         resources.files(slacker.schemas).joinpath('latest', 'webhook.schema.yaml').read_text()
     )
@@ -174,8 +177,62 @@ def log_group_has_slacker_subscription(log_group_name: str, logs_client) -> bool
 class CheckResults:
     """Container for check results."""
 
+    infos: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+
+    INFO: ClassVar[Final[int]] = 1 << 0
+    WARNING: ClassVar[Final[int]] = 1 << 1
+    ERROR: ClassVar[Final[int]] = 1 << 2
+    ALL: ClassVar[Final[int]] = (1 << 32) - 1
+
+    def info(self, *msg: str):
+        """Add an info message to the results."""
+        self.infos.append(': '.join(msg))
+
+    def warning(self, *msg: str):
+        """Add a warning message to the results."""
+        self.warnings.append(': '.join(msg))
+
+    def error(self, *msg: str):
+        """Add an error message to the results."""
+        self.errors.append(': '.join(msg))
+
+    def pprint(self, what: int = 0, **kwargs):
+        """
+        Pretty print the results.
+
+        :param what:    What items to show. This is a bit mask of the constants
+                        INFO, WARNING, ERROR. Default is to show all.
+        """
+        if not what:
+            what = self.ALL
+
+        n = 0
+        if what & self.ERROR:
+            for msg in self.errors:
+                n += 1
+                error(msg, **kwargs)
+        if what & self.WARNING:
+            for msg in self.warnings:
+                n += 1
+                warning(msg, **kwargs)
+        if what & self.INFO:
+            for msg in self.infos:
+                n += 1
+                info(msg, **kwargs)
+        if n:
+            print(**kwargs)
+
+    def __str__(self):
+        """Get a string representation of the results."""
+        return '\n'.join(
+            chain(
+                (f'E: {s}' for s in self.errors),
+                (f'W: {s}' for s in self.warnings),
+                (f'I: {s}' for s in self.infos),
+            )
+        )
 
 
 # ------------------------------------------------------------------------------
@@ -190,26 +247,30 @@ def check_webhook_item_content(item: dict[str, Any], results: CheckResults = Non
     :param results: If specified, add results to an existing CheckResults object.
     """
 
+    import jsonschema
+
     if not results:
         results = CheckResults()
 
     # The next couple of checks could be handled by the schema check. We
     # do it here instead because this will produce a much clearer error
-    # message for these particular errors
-    if not item.get('sourceId'):
-        results.errors.append('sourceId is required')
+    # message for these particular errors.
+
+    source_id = item.get('sourceId', '')
+    if not source_id:
+        results.error('sourceId is required')
     if not any(item.get(f) for f in ('url', 'channel')):
-        results.errors.append('No "channel" or "url" key')
+        results.error(source_id, 'No "channel" or "url" key')
     elif all(item.get(f) for f in ('url', 'channel')):
-        results.errors.append('Should not have both "channel" and "url" key')
+        results.error(source_id, 'Should not have both "channel" and "url" key')
     else:
         try:
             validate_webhook_schema(item)
         except jsonschema.exceptions.ValidationError as e:
-            results.errors.append(e.message)
+            results.error(source_id, e.message)
 
     if 'url' in item:
-        results.warnings.append('"url" key is deprecated - use "channel" instead')
+        results.warning(source_id, '"url" key is deprecated - use "channel" instead')
 
     return results
 
@@ -235,28 +296,29 @@ def check_webhook_item_context(
     if not aws_session:
         aws_session = boto3.Session()
 
+    source_id = item.get('sourceId', '')
+
     if channel := item.get('channel'):
         channels_table = aws_session.resource('dynamodb').Table(CHANNELS_TABLE)
         if channel_spec := get_channel(channel, channels_table):
             if not channel_spec.get('url'):
-                results.errors.append(f'Channel "{channel}" has no URL')
+                results.error(f'Channel "{channel}" has no URL')
         else:
-            results.errors.append(f'Channel "{channel}" does not exist')
+            results.error(source_id, f'Channel "{channel}" does not exist')
 
     # Check that the message source is valid
-    source_id = item.get('sourceId', '')
     if source_id.startswith('arn:aws:sns:'):
         sns = aws_session.client('sns')
         if not sns_topic_exists(source_id, sns):
-            results.errors.append('No such SNS topic')
+            results.error(source_id, 'No such SNS topic')
         elif not sns_topic_has_slacker_subscription(source_id, sns):
             # Check for a subscription on the topic to slacker Lambda
-            results.errors.append('No slacker subscription on topic')
+            results.error(source_id, 'No slacker subscription on topic')
     elif source_id.startswith('logs:'):
         logs = aws_session.client('logs')
         _, log_group_name = source_id.split(':', 1)
         if not log_group_has_slacker_subscription(log_group_name, logs):
-            results.errors.append('No subscription filter feeding slacker from log group')
+            results.error(source_id, 'No subscription filter feeding slacker from log group')
 
     return results
 
@@ -294,7 +356,8 @@ class CliCommand(ABC):
     # --------------------------------------------------------------------------
     def __init__(self, subparser):
         """Initialize the command handler."""
-        self.argp = subparser.add_parser(self.name, help=self.help_)
+
+        self.argp = subparser.add_parser(self.name, help=self.help_, description=self.help_)
         self.argp.set_defaults(handler=self)
 
     # --------------------------------------------------------------------------
@@ -514,13 +577,9 @@ class CmdPut(CliCommand):
 
         results = check_webhook_item_content(item)
         check_webhook_item_context(item, results=results, aws_session=aws_session)
-        for msg in results.warnings:
-            warning(msg, file=sys.stderr)
-        if results.errors:
-            for msg in results.errors:
-                error(msg, file=sys.stderr)
-            if not args.force:
-                raise SlackerError('Errors in webhooks entry')
+        results.pprint(file=sys.stderr)
+        if results.errors and not args.force:
+            raise SlackerError('Error(s) in webhooks entry')
 
         try:
             if str(item['account']) != account_id():
@@ -536,7 +595,7 @@ class CmdPut(CliCommand):
         if args.strip_schema_keywords:
             item = {k: v for k, v in item.items() if not k.startswith('$')}
         response = webhooks_table.put_item(Item=item, ReturnValues='ALL_OLD')
-        action = 'updated' if 'Attributes' in response else 'created'
+        action = 'updated' if response.get('Attributes') else 'created'
         print(f'{item["sourceId"]}: Item {action}')
         if args.backup and action == 'updated':
             dumper = (
@@ -548,9 +607,9 @@ class CmdPut(CliCommand):
                 dumper(response['Attributes'], fp)
             print(f'{response["Attributes"]["sourceId"]}: Previous data stored in {args.backup}')
 
-            if args.restart:
-                lambda_restart(SLACKER_APP_NAME)
-                print(f'{SLACKER_APP_NAME} restarted')
+        if args.restart:
+            lambda_restart(SLACKER_APP_NAME)
+            print(f'{SLACKER_APP_NAME} restarted')
 
     # --------------------------------------------------------------------------
     def execute(self, args: Namespace) -> None:
@@ -565,7 +624,7 @@ class CmdPut(CliCommand):
 # ------------------------------------------------------------------------------
 @CliCommand.register('test')
 class CmdTest(CliCommand):
-    """Test a message for processing against a webhooks entry."""
+    """Test a message read from stdin for processing against a webhooks entry."""
 
     def add_arguments(self):
         """Add arguments to the command handler."""
@@ -583,12 +642,9 @@ class CmdTest(CliCommand):
             item = yaml.safe_load(fp)
 
         results = check_webhook_item_content(item)
-        for msg in results.warnings:
-            warning(msg, file=sys.stderr)
+        results.pprint(file=sys.stderr)
         if results.errors:
-            for msg in results.errors:
-                error(msg, file=sys.stderr)
-            raise SlackerError('Errors in webhooks entry')
+            raise SlackerError('Error(s) in webhooks entry')
 
         msg_text = sys.stdin.read()
         msg = SlackerMsg(
@@ -619,6 +675,7 @@ class CmdCheck(CliCommand):
         region.
     """
 
+    # --------------------------------------------------------------------------
     def __init__(self, *args, **kwargs):
         """Initialize the check."""
 
@@ -628,8 +685,15 @@ class CmdCheck(CliCommand):
         self.ebridge = None
         self.slacker_arn = None
 
-    def execute(self, args: Namespace) -> None:
-        """Check slacker configuration."""
+    # --------------------------------------------------------------------------
+    def _setup(self) -> None:
+        """
+        Set up expensive resources for the check process.
+
+        We do this here because we don't want the startup penalty of doing it in
+        __init__() (which is executed whenever the CLI starts), and we separate
+        it from execute() for testability.
+        """
 
         self.aws_session = boto3.Session()
         dynamodb = self.aws_session.resource('dynamodb')
@@ -639,11 +703,23 @@ class CmdCheck(CliCommand):
         )
         self.webhooks_table = dynamodb.Table(WEBHOOKS_TABLE)
 
-        self.check_webhooks()
-        self.check_sns_subscriptions()
-        self.check_event_rules()
+    # --------------------------------------------------------------------------
+    def execute(self, args: Namespace) -> None:
+        """Check slacker configuration."""
 
-    def check_sns_subscriptions(self) -> None:
+        self._setup()
+
+        heading('Checking webhooks ...')
+        self.check_webhooks().pprint()
+
+        heading('Checking SNS subscriptions ...')
+        self.check_sns_subscriptions().pprint()
+
+        heading('Checking EventBridge rules ...')
+        self.check_event_rules().pprint()
+
+    # --------------------------------------------------------------------------
+    def check_sns_subscriptions(self) -> CheckResults:
         """
         Check SNS subscriptions to the slacker Lambda are ok.
 
@@ -651,7 +727,7 @@ class CmdCheck(CliCommand):
         corresponding webhook, subscriptions for which the topic is missing etc.
         """
 
-        heading('Checking SNS subscriptions...')
+        results = CheckResults()
         sns = self.aws_session.client('sns')
         paginator = sns.get_paginator('list_subscriptions')
         for response in paginator.paginate():
@@ -674,41 +750,40 @@ class CmdCheck(CliCommand):
                 topic_exists = sns_topic_exists(topic_arn, sns)
                 match (topic_exists, webhook_enabled):
                     case (True, True):
-                        info(f'{topic_arn}: OK')
-                    case (False, True):
-                        warning(f'{topic_arn}: Orphan SNS subscription and enabled webhooks entry')
+                        results.info(topic_arn, 'OK')
                     case (True, False):
                         # No webhook for this source. Maybe there is a wildcard
                         wildcard_webhook = get_webhook(WILDCARD_SOURCE_ID, self.webhooks_table)
                         if wildcard_webhook:
-                            info(f'{topic_arn}: Relying on wildcard webhook')
+                            results.info(topic_arn, 'Relying on wildcard webhook')
                         else:
-                            error(f'{topic_arn}: Webhooks entry is missing or disabled')
+                            results.error(topic_arn, 'Subscribed topic with no active webhooks')
+                    case (False, True):
+                        # These orphan subscription situations can happen in cross account
+                        # subscriptions. Very hard to unit test though.
+                        results.warning(
+                            topic_arn, 'Orphan SNS subscription and enabled webhooks entry'
+                        )
                     case (False, False):
-                        warning(f'{topic_arn}: Orphan SNS subscription')
-        print()
+                        results.warning(topic_arn, 'Orphan SNS subscription')
+        return results
 
-    def check_webhooks(self):
+    # --------------------------------------------------------------------------
+    def check_webhooks(self) -> CheckResults:
         """Check basic hygiene on webhooks."""
-
-        heading('Checking webhooks...')
+        results = CheckResults()
         for item in self.webhooks_table.scan(Select='ALL_ATTRIBUTES').get('Items', []):
             # Check some basic hygiene
-            source_id = item['sourceId']
-            results = check_webhook_item_content(item)
+            check_webhook_item_content(item, results=results)
             check_webhook_item_context(item, results=results, aws_session=self.aws_session)
+        return results
 
-            for msg in results.warnings:
-                warning(f'{source_id}: {msg}')
-            for msg in results.errors:
-                error(f'{source_id}: {msg}')
-        print()
-
-    def check_event_rules(self):
+    # --------------------------------------------------------------------------
+    def check_event_rules(self) -> CheckResults:
         """Check EventBridge rules."""
 
+        results = CheckResults()
         paginator = self.ebridge.get_paginator('list_rule_names_by_target')
-        heading('Checking EventBridge rules...')
         for response in paginator.paginate(TargetArn=self.slacker_arn):
             for rule_name in response.get('RuleNames', []):
                 # Check SlackerSourceId / SlackerSourceName present in input templates
@@ -717,19 +792,32 @@ class CmdCheck(CliCommand):
                     target_id,
                     source_id,
                     source_name,
+                    target_error,
                 ) in self.get_source_info_from_event_bridge_rule(rule_name):
+                    if target_error:
+                        # Target is broken in some way - report and move on
+                        rule_ok = False
+                        results.error(f'Rule: {rule_name}', target_error)
+                        continue
+
                     if not source_id:
                         rule_ok = False
-                        error(f'Rule {rule_name}: Target {target_id}: SlackerSourceId missing')
+                        results.error(
+                            f'Rule {rule_name}', f'Target {target_id}', 'SlackerSourceId missing'
+                        )
                     if not source_name:
                         rule_ok = False
-                        warning(f'Rule {rule_name}: Target {target_id}: SlackerSourceName missing')
+                        results.warning(
+                            f'Rule {rule_name}', f'Target {target_id}', 'SlackerSourceName missing'
+                        )
                 if rule_ok:
-                    info(f'Rule {rule_name}: OK')
+                    results.info(f'Rule {rule_name}', 'OK')
+        return results
 
+    # --------------------------------------------------------------------------
     def get_source_info_from_event_bridge_rule(
         self, rule_name: str
-    ) -> Iterator[tuple[str, str, str]]:
+    ) -> Iterator[tuple[str, str, str, str | None]]:
         """
         Get the source id / name slacker will see for a given EventBridge rule.
 
@@ -738,12 +826,15 @@ class CmdCheck(CliCommand):
         input template. We can't know their values until runtime but we can see
         if they are present.
 
-        There is a bit of a heuristic here in that we cannot full determine this
+        There is a bit of a heuristic here ... we cannot fully determine this
         until runtime but this will be pretty close except for some very rare
         edge cases.
 
-        :return:    A tuple (target ID, SlackerSourceId, SlackerSourceName) for
-                    each target pointed at slacker.
+        :return:    A tuple
+                        (target ID, SlackerSourceId, SlackerSourceName, error)
+                    for each target pointed at slacker. The `error` field will
+                    be a string if there was some target level problem with a
+                    target or None otherwise.
         """
 
         paginator = self.ebridge.get_paginator('list_targets_by_rule')
@@ -759,10 +850,15 @@ class CmdCheck(CliCommand):
                 try:
                     template = json.loads(template_s)
                 except json.JSONDecodeError:
-                    error(f'{rule_name}: Target {target["Id"]}: Invalid JSON template')
+                    target_error = f'Target {target["Id"]}: Bad JSON input template'
+                    yield target['Id'], '', '', target_error
                     continue
-                yield target['Id'], template.get('SlackerSourceId'), template.get(
-                    'SlackerSourceName'
+
+                yield (
+                    target['Id'],
+                    template.get('SlackerSourceId'),
+                    template.get('SlackerSourceName'),
+                    None,
                 )
 
 
@@ -780,6 +876,33 @@ class CmdRestart(CliCommand):
         """Restart the Lambda."""
 
         lambda_restart(SLACKER_APP_NAME)
+
+
+# ------------------------------------------------------------------------------
+@CliCommand.register('completion')
+class CmdCompletion(CliCommand):
+    """Generate the command line completion script."""
+
+    # --------------------------------------------------------------------------
+    def add_arguments(self) -> None:
+        """Add arguments to the command handler."""
+
+        self.argp.add_argument(
+            '-s',
+            '--shell',
+            default=Path(os.getenv('SHELL', 'bash')).stem,
+            help=(
+                'Output code for the specified shell. Defaults to the current shell,'
+                ' if that can be determined, otherwise "bash".'
+            ),
+        )
+
+    # --------------------------------------------------------------------------
+    @staticmethod
+    def execute(args: Namespace) -> None:
+        """Execute the CLI command with the specified arguments."""
+
+        print(argcomplete.shellcode([os.path.basename(sys.argv[0])], shell=args.shell))
 
 
 # ..............................................................................
@@ -808,6 +931,7 @@ def process_cli_args() -> argparse.Namespace:
     for cmd in sorted(CliCommand.commands.values(), key=lambda c: c.name):
         cmd(subp).add_arguments()
 
+    argcomplete.autocomplete(argp)
     args = argp.parse_args()
 
     try:
@@ -830,7 +954,7 @@ def main() -> int:
         # raise  # noqa: ERA001
         print(ex, file=sys.stderr)
         return 1
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  # pragma: no cover
         print('Interrupt', file=sys.stderr)
         return 2
 
@@ -838,5 +962,5 @@ def main() -> int:
 # ------------------------------------------------------------------------------
 # This only gets used during dev/test. Once deployed as a package, main() gets
 # imported and run directly.
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     exit(main())

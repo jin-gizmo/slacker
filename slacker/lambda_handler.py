@@ -39,14 +39,8 @@ def lambda_handler(event: dict[str, Any], context) -> None:
         log.debug('Received event:\n%s', json.dumps(event, sort_keys=True, indent=2))
 
     aws_session = boto3.Session()
-    try:
-        webhooks_table = aws_session.resource('dynamodb').Table(webhooks_table_name)
-    except Exception as e:
-        raise SlackerError(f'Cannot get DynamoDB table {webhooks_table_name} - {e}')
-    try:
-        channels_table = aws_session.resource('dynamodb').Table(channels_table_name)
-    except Exception as e:
-        raise SlackerError(f'Cannot get DynamoDB table {channels_table_name} - {e}')
+    webhooks_table = aws_session.resource('dynamodb').Table(webhooks_table_name)
+    channels_table = aws_session.resource('dynamodb').Table(channels_table_name)
 
     error_count = 0
     msg_count = 0

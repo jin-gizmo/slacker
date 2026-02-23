@@ -3,6 +3,30 @@
 
 ## Version 2
 
+#### Version 2.8.0
+
+*   A new `completion` subcommand has been added to the [slacker
+    CLI](#the-slacker-cli) to generate command completion scripts for common
+    shells (**zsh**, **bash** etc.).  See [Command Line
+    Completion](#command-line-completion).
+
+*   Start-up performance for the  [slacker CLI](#the-slacker-cli) has improved
+    significantly thanks to switching to lazy imports on the big packages.
+
+*   Fixed a bug in the [slacker CLI](#the-slacker-cli) `put` subcommand where
+    the slacker lambda was not restarted if the existing item was backed up.
+
+*   Other minor enhancements have been made to the CLI. Nothing worth writing
+    home about.
+
+*   [MakeHelp](https://github.com/jin-gizmo/makehelp) is now used to
+    auto-generate help for **make**.
+
+*   [TOCmark](https://github.com/jin-gizmo/tocmark) is now used to generate the
+    table of contents for the main README.
+
+*   Test coverage has increased from not bad to pretty good (99%).
+
 #### Version 2.7.0
 
 *   Added the following new [Jinja rendering parameters](#jinja-rendering):
